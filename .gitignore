@@ -1,0 +1,17 @@
+# 忽略所有的 .idea 目录
+**/.idea
+
+# 忽略所有的 .vs 目录
+**/.vs
+
+# 忽略所有的 obj 目的
+**/obj
+
+# 忽略所有的 bin 目录
+**/bin
+
+/Library
+
+/Logs
+
+/Temp
