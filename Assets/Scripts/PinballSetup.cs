@@ -79,9 +79,9 @@ public class PinballSetup : MonoBehaviour
 
         // 通道顶部导流板（将向上的球转为向左进入主区域）
         float deflectorRightX = channelLeftX + channelWidth - 0.1f;
-        float deflectorRightY = channelTopY + 0.3f;
+        float deflectorRightY = channelTopY + 0.8f;
         float deflectorLeftX = channelLeftX - 2.0f;
-        float deflectorLeftY = channelTopY + 2.5f;
+        float deflectorLeftY = channelTopY + 3f;
         float deflectorCenterX = (deflectorRightX + deflectorLeftX) * 0.5f;
         float deflectorCenterY = (deflectorRightY + deflectorLeftY) * 0.5f;
         float deflectorLen = Mathf.Sqrt((deflectorRightX - deflectorLeftX) * (deflectorRightX - deflectorLeftX)
@@ -168,16 +168,17 @@ public class PinballSetup : MonoBehaviour
         launcherComp.targetSlotIndex = -1;
 
         // ---------- 撞击器（避开右侧通道） ----------
-        float bumperAreaRight = channelLeftX - bumperRingRadius - 0.3f;
+        float ringCenterX = 2.0f;
+        float bumperAreaRight = channelLeftX - bumperRingRadius - 0.3f + ringCenterX;
         float ringCenterY = 0f;
 
-        // 五边形环形撞击器（左半区域）
+        // 五边形环形撞击器
         float angleStep = 360f / bumperRingCount;
         for (int i = 0; i < bumperRingCount; i++)
         {
             float angle = angleStep * i;
             float rad = angle * Mathf.Deg2Rad;
-            float bx = Mathf.Cos(rad) * bumperRingRadius;
+            float bx = ringCenterX + Mathf.Cos(rad) * bumperRingRadius;
             float by = ringCenterY + Mathf.Sin(rad) * bumperRingRadius;
             if (bx > bumperAreaRight)
             {
