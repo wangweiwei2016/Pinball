@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DefaultNamespace;
 
 /// <summary>
 /// 弹珠台总控：分数、生命数、UI 显示、奖品槽判定、游戏结束。
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     [Header("基础设置")]
     [Tooltip("初始生命（球）数。")]
-    public int startingBalls = 3;
+    public int startingBalls = 300;
 
     [Tooltip("分数倍率。")]
     public int scoreMultiplier = 1;
@@ -110,6 +111,21 @@ public class GameManager : MonoBehaviour
     public void OnBallEnterSlot(int slotIndex)
     {
         if (isGameOver) return;
+
+        // 停止回放/录制：回放到此即视为球已落入槽；录制则把本条轨迹以实际槽位保存
+        if (ball != null)
+        {
+            var recorder = ball.GetComponent<TrajectoryRecorder>();
+            if (recorder != null && recorder.IsRecording)
+            {
+                recorder.StopAndSave(slotIndex);
+            }
+            var tp = ball.GetComponent<TrajectoryPlayer>();
+            if (tp != null && tp.IsPlaying)
+            {
+                tp.Stop();
+            }
+        }
 
         int slotScore = 50;
         if (slotIndex >= 0 && slotIndex < slotScores.Length)

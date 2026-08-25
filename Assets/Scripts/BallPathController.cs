@@ -27,6 +27,9 @@ public class BallPathController : MonoBehaviour
     [Tooltip("球下落阶段额外引导强度。")]
     public float descentSteerBoost = 1.5f;
 
+    [Tooltip("是否启用实时引导。回放期间会被关闭，让球完全按预录轨迹运动。")]
+    public bool steeringEnabled = true;
+
     /// <summary>目标槽索引（-1 = 随机）。</summary>
     public int targetSlotIndex { get; private set; } = -1;
 
@@ -108,7 +111,7 @@ public class BallPathController : MonoBehaviour
     /// </summary>
     public Vector2 ModifyBounceVelocity(Vector2 naturalVelocity, Vector2 collisionPoint)
     {
-        if (targetSlotIndex < 0) return naturalVelocity;
+        if (!steeringEnabled || targetSlotIndex < 0) return naturalVelocity;
 
         Vector2 naturalDir = naturalVelocity.normalized;
         float speed = naturalVelocity.magnitude;
@@ -119,6 +122,7 @@ public class BallPathController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!steeringEnabled) return;
         if (targetSlotIndex >= 0 && rb != null && rb.velocity.y < -1f)
         {
             float dist = Mathf.Abs(targetX - rb.position.x);

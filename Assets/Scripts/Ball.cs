@@ -1,4 +1,5 @@
 using UnityEngine;
+using DefaultNamespace;
 
 /// <summary>
 /// 弹珠：处理碰撞反弹、速度限制、假物理可控反弹、奖品槽判定。
@@ -26,6 +27,7 @@ public class Ball : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 spawnPosition;
     private BallPathController pathController;
+    private TrajectoryPlayer trajectoryPlayer;
     private bool inSlot = false;
 
     /// <summary>球是否处于锁定静止状态。</summary>
@@ -58,6 +60,7 @@ public class Ball : MonoBehaviour
         rb.freezeRotation = true;
         spawnPosition = transform.position;
         pathController = GetComponent<BallPathController>();
+        trajectoryPlayer = GetComponent<TrajectoryPlayer>();
     }
 
     private void FixedUpdate()
@@ -68,6 +71,8 @@ public class Ball : MonoBehaviour
             rb.angularVelocity = 0f;
             return;
         }
+        // 回放期间由 TrajectoryPlayer 驱动位置，跳过真实物理修正
+        if (trajectoryPlayer != null && trajectoryPlayer.IsPlaying) return;
         ClampSpeed();
         PreventStall();
     }
@@ -99,6 +104,8 @@ public class Ball : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (locked) return;
+        // 回放期间球为运动学体，不参与真实碰撞反弹
+        if (trajectoryPlayer != null && trajectoryPlayer.IsPlaying) return;
 
         var bumper = collision.collider.GetComponent<Bumper>();
         if (bumper != null && bumper.isControllable && pathController != null)
@@ -162,6 +169,11 @@ public class Ball : MonoBehaviour
         if (pathController != null)
         {
             pathController.ClearTarget();
+            pathController.steeringEnabled = true;
+        }
+        if (trajectoryPlayer != null && trajectoryPlayer.IsPlaying)
+        {
+            trajectoryPlayer.Stop();
         }
     }
 

@@ -1,143 +1,201 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
+    /// <summary>
+    /// 轨迹回放器：把球切换为运动学体，按预录轨迹逐帧插值移动，
+    /// 实现塔塔冒险队式假物理——球看起来在自然弹跳，但落点确定可控。
+    /// 回放期间通过近距检测触发撞击器的视觉/音效/加分反馈，
+    /// 让“弹珠在挡板和机关之间反复碰撞”的观感得以保留。
+    /// </summary>
     public class TrajectoryPlayer : MonoBehaviour
     {
-        public Rigidbody ballRb;
-        public TrajectoryLibrary trajectoryLibrary; // 引用所有已加载的轨迹数据
+        [Header("引用")]
+        public Rigidbody2D ballRb;
+
+        [Header("回放微调")]
+        [Tooltip("是否对位置叠加极小随机扰动，避免每次完全一模一样。")]
+        public bool jitter = true;
+
+        [Tooltip("位置随机扰动幅度（米）。")]
+        public float jitterAmount = 0.01f;
+
+        [Tooltip("撞击器近距反馈的额外判定半径，避免高速掠过漏判。")]
+        public float bumperHitPadding = 0.05f;
 
         private TrajectoryData currentTrajectory;
         private int currentFrameIndex;
         private float playbackTimer;
         private bool isPlaying = false;
-        private Vector3 randomOffsetSeed;
-        private Vector3 currentVelocity;
-        
-        // 根据目标槽位选择轨迹
-        public bool PlayTrajectoryForSlot(int targetSlotId, Vector3 currentLaunchPos, float launchForce)
-        {
-            // 从轨迹库中筛选符合条件的轨迹
-            List<TrajectoryData> candidates = trajectoryLibrary.GetTrajectoriesBySlot(targetSlotId);
+        private Vector3 jitterOffset;
 
-            if (candidates.Count == 0)
+        // 撞击器近距反馈缓存
+        private Bumper[] cachedBumpers;
+        private bool[] bumperInside;
+        private float ballRadius;
+
+        /// <summary>是否正在回放。</summary>
+        public bool IsPlaying => isPlaying;
+
+        /// <summary>当前回放轨迹的目标槽（-1 表示无）。</summary>
+        public int CurrentTargetSlot => currentTrajectory != null ? currentTrajectory.targetSlotId : -1;
+
+        /// <summary>
+        /// 开始回放指定轨迹。球会被切为运动学，位置对齐到第 0 帧。
+        /// </summary>
+        public void PlayTrajectory(TrajectoryData trajectory)
+        {
+            if (trajectory == null || trajectory.frames == null || trajectory.frames.Count < 2)
             {
-                Debug.LogError($"没有找到槽位 {targetSlotId} 的轨迹！");
-                return false;
+                Debug.LogWarning("[TrajectoryPlayer] 轨迹无效，无法回放。");
+                return;
             }
 
-            // 选择最匹配当前发射参数的轨迹（距离和力度最接近的）
-            TrajectoryData bestMatch = FindBestMatch(candidates, currentLaunchPos, launchForce);
+            if (ballRb == null) ballRb = GetComponent<Rigidbody2D>();
+            if (ballRb == null) return;
 
-            if (bestMatch == null)
-            {
-                bestMatch = candidates[Random.Range(0, candidates.Count)]; // 保底随机选
-            }
-
-            // 开始回放
-            StartPlayback(bestMatch);
-            return true;
-        }
-
-        TrajectoryData FindBestMatch(List<TrajectoryData> candidates, Vector3 launchPos, float launchForce)
-        {
-            float bestScore = float.MaxValue;
-            TrajectoryData best = null;
-
-            foreach (var traj in candidates)
-            {
-                // 计算起始位置差异
-                float posDiff = Vector3.Distance(traj.startPosition, launchPos);
-                // 计算起始速度差异（力度）
-                float forceDiff = Mathf.Abs(traj.startVelocity.magnitude - launchForce);
-
-                // 综合评分（权重可调）
-                float score = posDiff * 0.3f + forceDiff * 0.7f;
-
-                if (score < bestScore)
-                {
-                    bestScore = score;
-                    best = traj;
-                }
-            }
-
-            return best;
-        }
-
-        void StartPlayback(TrajectoryData trajectory)
-        {
             currentTrajectory = trajectory;
             currentFrameIndex = 0;
             playbackTimer = 0f;
             isPlaying = true;
 
-            // 关闭物理模拟，变成纯运动学
+            // 切为运动学：忽略重力/受力，完全由回放驱动位置
             ballRb.isKinematic = true;
-            ballRb.useGravity = false;
+            ballRb.velocity = Vector2.zero;
+            ballRb.angularVelocity = 0f;
 
-            // 设置初始位置为轨迹起点（需要对齐发射位置）
-            ballRb.position = currentTrajectory.frames[0].position;
-            ballRb.rotation = currentTrajectory.frames[0].rotation;
+            TrajectoryFrame f0 = currentTrajectory.frames[0];
+            ballRb.position = f0.position;
+            ballRb.rotation = f0.rotation.eulerAngles.z;
 
-            // 添加一个非常微小的随机偏移种子，让每次看起来略有不同
-            randomOffsetSeed = new Vector3(
-                Random.Range(-0.01f, 0.01f),
-                0,
-                Random.Range(-0.01f, 0.01f)
-            );
+            jitterOffset = jitter
+                ? new Vector3(Random.Range(-jitterAmount, jitterAmount), Random.Range(-jitterAmount, jitterAmount), 0f)
+                : Vector3.zero;
+
+            PrepareBumperCache();
         }
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
             if (!isPlaying || currentTrajectory == null) return;
 
             playbackTimer += Time.fixedDeltaTime;
 
-            // 根据时间戳找到当前应该在哪一帧
-            while (currentFrameIndex < currentTrajectory.frames.Count - 1 &&
-                   currentTrajectory.frames[currentFrameIndex + 1].timestamp <= playbackTimer)
+            var frames = currentTrajectory.frames;
+            while (currentFrameIndex < frames.Count - 1 &&
+                   frames[currentFrameIndex + 1].timestamp <= playbackTimer)
             {
                 currentFrameIndex++;
             }
 
-            if (currentFrameIndex >= currentTrajectory.frames.Count - 1)
+            if (currentFrameIndex >= frames.Count - 1)
             {
-                // 播放结束
                 FinishPlayback();
                 return;
             }
 
-            // 插值计算当前帧的位置和旋转
-            TrajectoryFrame current = currentTrajectory.frames[currentFrameIndex];
-            TrajectoryFrame next = currentTrajectory.frames[currentFrameIndex + 1];
-            float t = (playbackTimer - current.timestamp) / (next.timestamp - current.timestamp);
+            TrajectoryFrame cur = frames[currentFrameIndex];
+            TrajectoryFrame next = frames[currentFrameIndex + 1];
+            float span = next.timestamp - cur.timestamp;
+            float t = span > 0.0001f ? Mathf.Clamp01((playbackTimer - cur.timestamp) / span) : 0f;
 
-            // 位置插值（加微小随机偏移，让轨迹看起来不100%重复）
-            Vector3 targetPos = Vector3.Lerp(current.position, next.position, t);
-            targetPos += randomOffsetSeed * (1f - t); // 偏移随进度逐渐消失，确保最终落点精确
+            Vector3 targetPos = Vector3.Lerp(cur.position, next.position, t);
+            if (jitter)
+            {
+                // 扰动随进度衰减，保证最终落点精确
+                targetPos += jitterOffset * (1f - t) * ((float)(frames.Count - currentFrameIndex) / frames.Count);
+            }
 
-            // 旋转插值
-            Quaternion targetRot = Quaternion.Slerp(current.rotation, next.rotation, t);
-
-            // 应用位置和旋转
             ballRb.MovePosition(targetPos);
-            ballRb.MoveRotation(targetRot);
+            ballRb.MoveRotation(Quaternion.Slerp(cur.rotation, next.rotation, t).eulerAngles.z);
 
-            // 速度用于碰撞特效和音效（虽然不参与物理，但可用于表现）
-            currentVelocity = Vector3.Lerp(current.velocity, next.velocity, t);
+            TickBumperFeedback();
         }
 
-        void FinishPlayback()
+        /// <summary>停止回放，恢复球为动态体（供下次发球或重置使用）。</summary>
+        public void Stop()
         {
+            if (!isPlaying) return;
             isPlaying = false;
+            currentTrajectory = null;
+            if (ballRb != null)
+            {
+                ballRb.velocity = Vector2.zero;
+                ballRb.angularVelocity = 0f;
+                ballRb.isKinematic = false;
+            }
+        }
 
-            // 确保精确落在目标位置
-            Vector3 finalPos = currentTrajectory.frames[currentTrajectory.frames.Count - 1].position;
-            ballRb.position = finalPos;
+        private void FinishPlayback()
+        {
+            // 对齐到末帧
+            if (currentTrajectory != null && currentTrajectory.frames.Count > 0)
+            {
+                TrajectoryFrame last = currentTrajectory.frames[currentTrajectory.frames.Count - 1];
+                if (ballRb != null)
+                {
+                    ballRb.position = last.position;
+                    ballRb.rotation = last.rotation.eulerAngles.z;
+                }
+            }
+            isPlaying = false;
+            // 不在此恢复 isKinematic：球入槽触发由 GameManager 处理，由其调用 Stop 复位
+        }
 
-            // 触发落点事件（显示奖励、播放特效等）
-            //OnBallLanded(currentTrajectory.targetSlotId);
+        private void PrepareBumperCache()
+        {
+            if (cachedBumpers == null || cachedBumpers.Length == 0)
+            {
+                cachedBumpers = FindObjectsOfType<Bumper>();
+            }
+            bumperInside = cachedBumpers != null ? new bool[cachedBumpers.Length] : System.Array.Empty<bool>();
+
+            ballRadius = 0.25f;
+            if (ballRb != null)
+            {
+                var col = ballRb.GetComponent<Collider2D>();
+                if (col is CircleCollider2D circle)
+                    ballRadius = circle.radius * Mathf.Max(ballRb.transform.lossyScale.x, 0.0001f);
+            }
+        }
+
+        private void TickBumperFeedback()
+        {
+            if (cachedBumpers == null) return;
+            Vector2 pos = ballRb.position;
+
+            for (int i = 0; i < cachedBumpers.Length; i++)
+            {
+                Bumper b = cachedBumpers[i];
+                if (b == null) continue;
+
+                float bumperRadius = GetBumperRadius(b);
+                float threshold = bumperRadius + ballRadius + bumperHitPadding;
+                float dist = ((Vector2)b.transform.position - pos).sqrMagnitude;
+
+                if (dist < threshold * threshold)
+                {
+                    if (!bumperInside[i])
+                    {
+                        bumperInside[i] = true;
+                        b.TriggerHitFeedback();
+                    }
+                }
+                else
+                {
+                    bumperInside[i] = false;
+                }
+            }
+        }
+
+        private static float GetBumperRadius(Bumper b)
+        {
+            var col = b.GetComponent<Collider2D>();
+            if (col is CircleCollider2D circle)
+                return circle.radius * Mathf.Max(b.transform.lossyScale.x, 0.0001f);
+            // 退化：用 bounds 估算
+            return col != null ? Mathf.Max(col.bounds.extents.x, col.bounds.extents.y) : 0.35f;
         }
     }
 }

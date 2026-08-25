@@ -1,4 +1,4 @@
-﻿namespace DefaultNamespace
+namespace DefaultNamespace
 {
     using System.Collections.Generic;
     using System.IO;
@@ -112,6 +112,27 @@
             List<TrajectoryData> list = GetTrajectoriesBySlot(slotId);
             if (list == null || list.Count == 0) return null;
             return list[Random.Range(0, list.Count)];
+        }
+
+        /// <summary>
+        /// 随机返回一个存在轨迹的槽位 ID。
+        /// maxSlotExclusive 为有效槽位数上限（用于约束在合法槽范围内）；传 -1 表示不约束。
+        /// 没有任何轨迹时返回 -1。
+        /// </summary>
+        public int GetRandomSlotWithTrajectory(int maxSlotExclusive = -1)
+        {
+            if (!isLoaded) LoadAllTrajectories();
+
+            var keys = new List<int>();
+            foreach (var kvp in trajectoryIndex)
+            {
+                if (kvp.Value.Count > 0 && (maxSlotExclusive < 0 || kvp.Key < maxSlotExclusive))
+                {
+                    keys.Add(kvp.Key);
+                }
+            }
+            if (keys.Count == 0) return -1;
+            return keys[Random.Range(0, keys.Count)];
         }
 
         /// <summary>

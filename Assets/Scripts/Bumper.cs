@@ -57,12 +57,13 @@ public class Bumper : MonoBehaviour
         originalScale = transform.localScale;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    /// <summary>
+    /// 触发撞击反馈：加分、音效、缩放动画，但不改变球速度。
+    /// 供回放（TrajectoryPlayer）在球沿预录轨迹经过撞击器时调用，
+    /// 让“弹珠在机关间反复碰撞”的观感得以保留。
+    /// </summary>
+    public void TriggerHitFeedback()
     {
-        var ball = collision.collider.GetComponent<Ball>();
-        if (ball == null) return;
-
-        // 加分和视觉反馈始终执行
         int finalScore = Mathf.Max(score, baseScore);
         if (GameManager.Instance != null)
         {
@@ -76,6 +77,15 @@ public class Bumper : MonoBehaviour
 
         if (hitRoutine != null) StopCoroutine(hitRoutine);
         if (hitScale > 0f) hitRoutine = StartCoroutine(HitScaleRoutine());
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        var ball = collision.collider.GetComponent<Ball>();
+        if (ball == null) return;
+
+        // 加分、音效、缩放动画（与是否可控无关）
+        TriggerHitFeedback();
 
         // 非可控撞击器：直接设置反弹速度
         if (!isControllable)

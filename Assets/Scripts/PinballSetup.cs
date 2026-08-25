@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using DefaultNamespace;
 
 /// <summary>
 /// 垂直弹珠台：一键搭建场景。
@@ -221,6 +222,13 @@ public class PinballSetup : MonoBehaviour
         pathController.slotCenterXs = slotCenterXs;
         pathController.slotAreaCenterY = slotAreaCenterY;
 
+        // ---------- 轨迹回放器 + 录制器（假物理：预录轨迹回放，BallPathController 作为后备） ----------
+        var trajectoryPlayer = ballGo.AddComponent<TrajectoryPlayer>();
+        trajectoryPlayer.ballRb = ballRb;
+        var trajectoryRecorder = ballGo.AddComponent<TrajectoryRecorder>();
+        trajectoryRecorder.ballRb = ballRb;
+        trajectoryRecorder.enableRecording = false; // 编辑器中预录时勾选 true
+
         // ---------- 摄像机 ----------
         var cam = Camera.main;
         if (cam == null)
@@ -238,6 +246,11 @@ public class PinballSetup : MonoBehaviour
         var gmGo = new GameObject("GameManager");
         var gm = gmGo.AddComponent<GameManager>();
         gm.ball = ball;
+
+        // ---------- 轨迹库（单例，独立 GameObject + DontDestroyOnLoad，
+        //           运行时从 Resources/Trajectories 加载预录轨迹） ----------
+        var libGo = new GameObject("TrajectoryLibrary");
+        libGo.AddComponent<TrajectoryLibrary>();
 
         // ---------- UI ----------
         BuildUI(gm);
