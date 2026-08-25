@@ -19,7 +19,7 @@ public class Launcher : MonoBehaviour
 
     [Header("可控结果")]
     [Tooltip("指定目标槽索引（-1 = 随机，-2 = 自由弹跳不控制）。")]
-    public int targetSlotIndex = 0;//-1;
+    public int targetSlotIndex = -1;
 
     private Ball ballInChannel;
 
@@ -101,10 +101,9 @@ public class Launcher : MonoBehaviour
                     ballInChannel = null;
                     return;
                 }
+                Debug.Log($"FindBestMatch,fail,slot={slot}");
             }
         }
-
-        Debug.Log($"FindBestMatch,fail");
         // ---- 模式 3：后备——真实物理 + 实时引导 ----
         rb.isKinematic = false;
         if (pathController != null) pathController.steeringEnabled = true;

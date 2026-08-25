@@ -14,24 +14,19 @@ using DefaultNamespace;
 /// </summary>
 public class PinballSetup : MonoBehaviour
 {
-    [Header("桌面尺寸")]
-    public float tableWidth = 8f;
+    [Header("桌面尺寸")] public float tableWidth = 8f;
     public float tableHeight = 14f;
     public float wallThickness = 0.4f;
 
-    [Header("物理")]
-    public float gravityScale = 1.6f;
+    [Header("物理")] public float gravityScale = 1.6f;
 
-    [Header("发射通道")]
-    public float channelWidth = 1.0f;
+    [Header("发射通道")] public float channelWidth = 1.0f;
     public float channelTopY = 4.5f;
 
-    [Header("奖品槽")]
-    public int slotCount = 5;
+    [Header("奖品槽")] public int slotCount = 5;
     public float slotHeight = 1.5f;
 
-    [Header("撞击器")]
-    public float bumperRingRadius = 3.0f;
+    [Header("撞击器")] public float bumperRingRadius = 3.0f;
     public int bumperRingCount = 10;
 
     private void Start()
@@ -51,10 +46,10 @@ public class PinballSetup : MonoBehaviour
 
         // ---------- 外围封闭墙体 ----------
         Color wallColor = new Color(0.35f, 0.32f, 0.45f);
-        CreateWallColored("WallLeft",   new Vector2(-halfW, 0f),  new Vector2(wallThickness, tableHeight), rootTransform, wallColor);
-        CreateWallColored("WallRight",  new Vector2( halfW, 0f),  new Vector2(wallThickness, tableHeight), rootTransform, wallColor);
-        CreateWallColored("WallTop",    new Vector2(0f,  halfH),  new Vector2(outerW, wallThickness),     rootTransform, wallColor);
-        CreateWallColored("WallBottom", new Vector2(0f, -halfH),  new Vector2(outerW, wallThickness),     rootTransform, wallColor);
+        CreateWallColored("WallLeft", new Vector2(-halfW, 0f), new Vector2(wallThickness, tableHeight), rootTransform, wallColor);
+        CreateWallColored("WallRight", new Vector2(halfW, 0f), new Vector2(wallThickness, tableHeight), rootTransform, wallColor);
+        CreateWallColored("WallTop", new Vector2(0f, halfH), new Vector2(outerW, wallThickness), rootTransform, wallColor);
+        CreateWallColored("WallBottom", new Vector2(0f, -halfH), new Vector2(outerW, wallThickness), rootTransform, wallColor);
 
         // ---------- 右侧发射通道 ----------
         float channelLeftX = halfW - channelWidth;
@@ -112,7 +107,7 @@ public class PinballSetup : MonoBehaviour
 
         Color slotWallColor = new Color(0.55f, 0.4f, 0.25f);
         Color slotBaseColor = new Color(0.35f, 0.25f, 0.15f);
-        Color barrierColor  = new Color(0.75f, 0.6f, 0.3f);
+        Color barrierColor = new Color(0.75f, 0.6f, 0.3f);
         int[] slotScores = { 20, 40, 100, 40, 20 };
 
         for (int i = 0; i < slotCount; i++)
@@ -169,38 +164,144 @@ public class PinballSetup : MonoBehaviour
         launcherComp.targetSlotIndex = -1;
 
         // ---------- 撞击器（避开右侧通道） ----------
-        float ringCenterX = 2.0f;
-        float bumperAreaRight = channelLeftX - bumperRingRadius - 0.3f + ringCenterX;
-        float ringCenterY = 0f;
+        // 图片风格：自然分散布局，非正五边形环形
+        // 主游戏区 x 范围：(-halfW + wallThickness) ~ (channelLeftX - wallThickness)
+        float bumperAreaRight = channelLeftX - wallThickness * 0.5f;
+        float bumperAreaLeft = -halfW + wallThickness * 0.5f;
+        float bumperAreaTop = channelTopY + 0.5f;
+        float bumperAreaBottom = slotBottomY + slotHeight + 0.5f;
 
-        // 五边形环形撞击器
-        float angleStep = 360f / bumperRingCount;
-        for (int i = 0; i < bumperRingCount; i++)
+        // 分散撞击器位置（按图片中小圆点分布手工排布）
+        Vector2[] bumperPositions = new Vector2[]
         {
-            float angle = angleStep * i;
-            float rad = angle * Mathf.Deg2Rad;
-            float bx = ringCenterX + Mathf.Cos(rad) * bumperRingRadius;
-            float by = ringCenterY + Mathf.Sin(rad) * bumperRingRadius;
-            if (bx > bumperAreaRight)
-            {
-                bx = bumperAreaRight - (bx - bumperAreaRight);
-            }
-            CreateBumper("BumperRing" + i, new Vector2(bx, by), 0.35f, rootTransform, true);
+            // 顶部弧形
+            new Vector2(-0.5f, 4.0f),
+
+            new Vector2(-1.5f, 3.1f),
+            new Vector2(0.5f, 3.1f),
+
+            new Vector2(-2.5f, 2.3f),
+            new Vector2(-0.5f, 2.3f),
+            new Vector2(1.5f, 2.3f),
+
+            new Vector2(-1.3f, 1.8f),
+            new Vector2(0.3f, 1.8f),
+
+            new Vector2(-0.5f, 1.1f),
+            // 中部
+            new Vector2(-1f, 0f),
+            new Vector2(0f, 0f),
+
+            new Vector2(-2.8f, -0.6f),
+            new Vector2(1.8f, -0.6f),
+            // 下
+            new Vector2(-1.5f, -1.8f),
+            new Vector2(-0.5f, -1.8f),
+            new Vector2(0.5f, -1.8f),
+            // 底部
+            new Vector2(-2.2f, -2.8f),
+            new Vector2(1.2f, -2.8f),
+
+            new Vector2(-2.7f, -3.6f),
+            new Vector2(1.8f, -3.6f),
+
+            new Vector2(-2.0f, -4.2f),
+            new Vector2(1.2f, -4.2f),
+        };
+
+        for (int i = 0; i < bumperPositions.Length; i++)
+        {
+            Vector2 pos = bumperPositions[i];
+            // 钳制到主游戏区内，避开通道
+            //pos.x = Mathf.Clamp(pos.x, bumperAreaLeft + 0.4f, bumperAreaRight - 0.4f);
+            //pos.y = Mathf.Clamp(pos.y, bumperAreaBottom + 0.4f, bumperAreaTop - 0.4f);
+            CreateBumper("Bumper" + i, pos, 0.2f, rootTransform, true);
         }
 
         // 中央大撞击器
-        CreateBumper("BumperCenter", new Vector2(0f, ringCenterY), 0.7f, rootTransform, true);
+        //CreateBumper("BumperCenter", new Vector2(-0.5f, 3.2f), 0.7f, rootTransform, true);
+
+        // ---------- 中部偏下：特殊奖励槽 + 两侧弧形撞击器 ----------
+        float specialSlotX = -0.5f;
+        float specialSlotY = -3.6f;
+        float specialSlotW = 0.8f;
+        float specialSlotH = 0.5f;
+        Color specialSlotColor = new Color(0.2f, 0.15f, 0.05f);
+        Color specialSlotRimColor = new Color(1f, 0.82f, 0.2f);
+
+        // 特殊槽底板
+        CreateWallColored("SpecialSlotBase",
+            new Vector2(specialSlotX, specialSlotY - specialSlotH * 0.5f),
+            new Vector2(specialSlotW, 0.12f), rootTransform, specialSlotRimColor);
+
+        // 特殊槽侧壁
+        CreateWallColored("SpecialSlotWallL",
+            new Vector2(specialSlotX - specialSlotW * 0.5f, specialSlotY),
+            new Vector2(0.12f, specialSlotH), rootTransform, specialSlotRimColor);
+        CreateWallColored("SpecialSlotWallR",
+            new Vector2(specialSlotX + specialSlotW * 0.5f, specialSlotY),
+            new Vector2(0.12f, specialSlotH), rootTransform, specialSlotRimColor);
+
+        // 特殊槽背景
+        var specialSlotBg = new GameObject("SpecialSlotBg");
+        specialSlotBg.transform.SetParent(rootTransform, false);
+        specialSlotBg.transform.position = new Vector2(specialSlotX, specialSlotY);
+        specialSlotBg.transform.localScale = new Vector3(specialSlotW - 0.24f, specialSlotH, 1f);
+        var specialSlotBgSr = specialSlotBg.AddComponent<SpriteRenderer>();
+        specialSlotBgSr.sprite = MakeRectSprite(specialSlotColor);
+        specialSlotBgSr.sortingOrder = 0;
+
+        // 特殊槽触发器（标签 Slot，索引 5，超出常规槽范围 → GameManager 给予特殊奖励分）
+        var specialTrigger = new GameObject("SlotTrigger5");
+        specialTrigger.transform.SetParent(rootTransform, false);
+        specialTrigger.transform.position = new Vector2(specialSlotX, specialSlotY);
+        var specialCol = specialTrigger.AddComponent<BoxCollider2D>();
+        specialCol.isTrigger = true;
+        specialCol.size = new Vector2(specialSlotW * 0.8f, specialSlotH * 0.8f);
+        specialCol.tag = "Slot";
+
+        CreateSlotLabel("SpecialSlotLabel", specialSlotX, specialSlotY + specialSlotH * 0.55f, rootTransform, 500);
+
+        // 两侧弧形撞击器（围绕特殊槽，形成漏斗形引导）
+        float arcCenterY = specialSlotY;
+        float arcRadius = 1.3f;
+        int arcBumperCount = 5;
+        float arcBumperRadius = 0.2f;
+
+        // // 左弧（圆心在特殊槽左侧，弧面朝右，形成 "(" 形状）
+        // float leftArcCenterX = -1.8f;
+        // for (int i = 0; i < arcBumperCount; i++)
+        // {
+        //     // 角度从 -50° 到 50°，弧面朝向特殊槽（右侧）
+        //     float angle = Mathf.Lerp(-50f, 50f, (float)i / (arcBumperCount - 1));
+        //     float rad = angle * Mathf.Deg2Rad;
+        //     float bx = leftArcCenterX + Mathf.Cos(rad) * arcRadius;
+        //     float by = arcCenterY + Mathf.Sin(rad) * arcRadius;
+        //     CreateBumper("LeftArcBumper" + i, new Vector2(bx, by), arcBumperRadius, rootTransform, true);
+        // }
+        //
+        // // 右弧（圆心在特殊槽右侧，弧面朝左，形成 ")" 形状）
+        // float rightArcCenterX = 1.8f;
+        // for (int i = 0; i < arcBumperCount; i++)
+        // {
+        //     // 角度从 130° 到 230°，弧面朝向特殊槽（左侧）
+        //     float angle = Mathf.Lerp(130f, 230f, (float)i / (arcBumperCount - 1));
+        //     float rad = angle * Mathf.Deg2Rad;
+        //     float bx = rightArcCenterX + Mathf.Cos(rad) * arcRadius;
+        //     float by = arcCenterY + Mathf.Sin(rad) * arcRadius;
+        //     CreateBumper("RightArcBumper" + i, new Vector2(bx, by), arcBumperRadius, rootTransform, true);
+        // }
 
         // 特殊撞击器
-        CreateSpecialBumper("SpecialStar",   new Vector2(-1.5f, ringCenterY + 2.0f), 0.5f, rootTransform, new Color(1f, 0.85f, 0.2f));
-        CreateSpecialBumper("SpecialShield", new Vector2(1.0f, ringCenterY + 2.0f), 0.5f, rootTransform, new Color(0.4f, 0.7f, 1f));
+        CreateSpecialBumper("SpecialStar", new Vector2(-2.5f, 1.2f), 0.5f, rootTransform, new Color(1f, 0.85f, 0.2f));
+        CreateSpecialBumper("SpecialShield", new Vector2(1.5f, 1.2f), 0.5f, rootTransform, new Color(0.4f, 0.7f, 1f));
 
         // ---------- 球（初始在发射通道底部，静止锁定） ----------
         Vector2 ballStart = new Vector2(launcherX, launcherY + 0.2f);
         var ballGo = new GameObject("Ball");
         ballGo.transform.SetParent(rootTransform, false);
         ballGo.transform.position = ballStart;
-        ballGo.transform.localScale = new Vector3(0.56f, 0.56f, 1f);
+        ballGo.transform.localScale = new Vector3(0.4f, 0.4f, 1f);
         var ballRb = ballGo.AddComponent<Rigidbody2D>();
         ballRb.gravityScale = gravityScale;
         ballRb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
@@ -214,11 +315,14 @@ public class PinballSetup : MonoBehaviour
 
         // ---------- 球路径控制器（可控假物理） ----------
         var pathController = ballGo.AddComponent<BallPathController>();
-        float[] slotCenterXs = new float[slotCount];
+        // 包含底部奖品槽（0~slotCount-1）+ 中部特殊奖励槽（索引 slotCount）
+        float[] slotCenterXs = new float[slotCount + 1];
         for (int i = 0; i < slotCount; i++)
         {
             slotCenterXs[i] = slotAreaLeft + slotWidth * 0.5f + i * slotWidth;
         }
+        slotCenterXs[slotCount] = 0f; // 特殊奖励槽 X 坐标
+
         pathController.slotCenterXs = slotCenterXs;
         pathController.slotAreaCenterY = slotAreaCenterY;
 
@@ -237,6 +341,7 @@ public class PinballSetup : MonoBehaviour
             cam = camGo.AddComponent<Camera>();
             camGo.tag = "MainCamera";
         }
+
         cam.transform.position = new Vector3(0f, 0f, -10f);
         cam.orthographic = true;
         cam.orthographicSize = tableHeight / 2f + 1f;
@@ -404,6 +509,7 @@ public class PinballSetup : MonoBehaviour
                 tex.SetPixel(x, y, color);
             }
         }
+
         tex.Apply();
         var sprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
         return sprite;
@@ -426,6 +532,7 @@ public class PinballSetup : MonoBehaviour
                 tex.SetPixel(x, y, c);
             }
         }
+
         tex.Apply();
         return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size);
     }

@@ -132,6 +132,11 @@ public class GameManager : MonoBehaviour
         {
             slotScore = slotScores[slotIndex];
         }
+        else if (slotIndex == 5)
+        {
+            // 中部偏下特殊奖励槽
+            slotScore = 500;
+        }
 
         AddScore(slotScore);
 
@@ -140,7 +145,10 @@ public class GameManager : MonoBehaviour
 
         if (statusText != null)
         {
-            statusText.text = $"落入槽 {slotIndex + 1}，获得 {slotScore} 分";
+            if (slotIndex == 5)
+                statusText.text = $"命中特殊奖励槽！获得 {slotScore} 分";
+            else
+                statusText.text = $"落入槽 {slotIndex + 1}，获得 {slotScore} 分";
         }
 
         if (ballsLeft <= 0)
