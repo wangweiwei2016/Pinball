@@ -11,17 +11,11 @@ namespace DefaultNamespace
     /// 轨迹录制器：在编辑器 Play 模式下用真实物理 + BallPathController 跑一遍弹珠路径，
     /// 逐帧记录位置/速度/旋转，球入槽时保存为 ScriptableObject 资源，
     /// 供运行时 TrajectoryPlayer 回放，实现塔塔冒险队式假物理弹珠。
-    /// 运行时（正式包）不会录制，仅回放。
+    /// 录制开关由 GameManager 全局统一管理（F6 切换）。
     /// </summary>
     public class TrajectoryRecorder : MonoBehaviour
     {
         [Header("录制设置")]
-        [Tooltip("启用录制（仅编辑器用）。勾选后每次发球都会录制并保存为资源；正式运行时请关闭。")]
-        public bool enableRecording = false;
-
-        [Tooltip("运行时切换录制开关的按键（编辑器 Play 模式下预录轨迹用）。")]
-        public KeyCode toggleKey = KeyCode.F6;
-
         [Tooltip("单条轨迹最大录制时长（秒），超时自动停止保存。")]
         public float recordDuration = 15f;
 
@@ -37,19 +31,23 @@ namespace DefaultNamespace
         private Vector3 startPosition;
         private Vector3 startVelocity;
 
+        // 特殊撞击器碰撞标志
+        private bool hitStar = false;
+        private bool hitShield = false;
+
         /// <summary>是否正在录制。</summary>
         public bool IsRecording => isRecording;
 
-#if UNITY_EDITOR
-        private void Update()
+        /// <summary>全局录制开关（从 GameManager 读取）。</summary>
+        public bool enableRecording
         {
-            if (Input.GetKeyDown(toggleKey))
+            get
             {
-                enableRecording = !enableRecording;
-                Debug.Log($"[TrajectoryRecorder] 录制模式：{(enableRecording ? "开" : "关")}（{toggleKey} 切换）");
+                if (GameManager.Instance != null)
+                    return GameManager.Instance.EnableRecording;
+                return false;
             }
         }
-#endif
 
         /// <summary>
         /// 开始录制。由 Launcher 在录制模式发球时调用。
@@ -65,6 +63,8 @@ namespace DefaultNamespace
             recordedFrames.Clear();
             timer = 0f;
             isRecording = true;
+            hitStar = false;
+            hitShield = false;
 
             // 确保真实物理开启
             ballRb.isKinematic = false;
@@ -75,6 +75,27 @@ namespace DefaultNamespace
             // 立即写入第 0 帧
             CaptureFrame();
         }
+
+        /// <summary>
+        /// 通知球碰到了特殊撞击器（按 GameObject 名字判定）。
+        /// 由 Ball.OnCollisionEnter2D 在录制期间调用。
+        /// </summary>
+        public void NotifySpecialHit(string bumperName)
+        {
+            if (!isRecording) return;
+
+            if (bumperName != null && bumperName.Contains("Star"))
+            {
+                hitStar = true;
+            }
+            else if (bumperName != null && bumperName.Contains("Shield"))
+            {
+                hitShield = true;
+            }
+        }
+
+        public bool HasHitStar => hitStar;
+        public bool HasHitShield => hitShield;
 
         private void FixedUpdate()
         {
@@ -154,16 +175,21 @@ namespace DefaultNamespace
             asset.totalDuration = timer;
             asset.startPosition = startPosition;
             asset.startVelocity = startVelocity;
+            asset.hitSpecialStar = hitStar;
+            asset.hitSpecialShield = hitShield;
 
+            string tag = "";
+            if (hitStar) tag += "_star";
+            if (hitShield) tag += "_shield";
             string stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string path = $"{folder}/slot_{targetSlotId}_{stamp}.asset";
+            string path = $"{folder}/slot_{targetSlotId}{tag}_{stamp}.asset";
             path = AssetDatabase.GenerateUniqueAssetPath(path);
 
             AssetDatabase.CreateAsset(asset, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            Debug.Log($"[TrajectoryRecorder] 已保存轨迹：{path}（{recordedFrames.Count} 帧，槽位 {targetSlotId}）");
+            Debug.Log($"[TrajectoryRecorder] 已保存轨迹：{path}（{recordedFrames.Count} 帧，槽位 {targetSlotId}，Star={hitStar}，Shield={hitShield}）");
         }
 #endif
     }

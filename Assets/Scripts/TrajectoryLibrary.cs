@@ -140,6 +140,18 @@ namespace DefaultNamespace
         /// </summary>
         public TrajectoryData FindBestMatch(int targetSlotId, Vector3 launchPos, float launchForce)
         {
+            return FindBestMatch(targetSlotId, launchPos, launchForce, false, false, false);
+        }
+
+        /// <summary>
+        /// 根据起始位置、力度、特殊撞击器要求匹配最合适的轨迹。
+        /// requireStar=true 时只匹配撞过 SpecialStar 的轨迹；
+        /// requireShield=true 时只匹配撞过 SpecialShield 的轨迹；
+        /// 两者皆 false 时不过滤（兼容旧的调用）。
+        /// </summary>
+        public TrajectoryData FindBestMatch(int targetSlotId, Vector3 launchPos, float launchForce,
+            bool requireStar, bool requireShield, bool requireAny)
+        {
             List<TrajectoryData> candidates = GetTrajectoriesBySlot(targetSlotId);
             if (candidates == null || candidates.Count == 0) return null;
 
@@ -148,15 +160,17 @@ namespace DefaultNamespace
 
             foreach (var traj in candidates)
             {
-                // 起始位置差异（只比较X和Z，忽略Y，因为发射点在同一平面）
+                bool hitAny = traj.hitSpecialStar || traj.hitSpecialShield;
+                if (requireStar && !traj.hitSpecialStar) continue;
+                if (requireShield && !traj.hitSpecialShield) continue;
+                if (requireAny && !hitAny) continue;
+
                 Vector3 posDiff = traj.startPosition - launchPos;
                 posDiff.y = 0;
                 float posScore = posDiff.magnitude;
 
-                // 起始速度差异（力度）
                 float forceScore = Mathf.Abs(traj.startVelocity.magnitude - launchForce);
 
-                // 综合评分（权重可调整）
                 float score = posScore * 0.5f + forceScore * 0.5f;
 
                 if (score < bestScore)
@@ -167,6 +181,24 @@ namespace DefaultNamespace
             }
 
             return best;
+        }
+
+        /// <summary>
+        /// 判断指定槽位是否有满足特殊撞击器要求的轨迹。
+        /// </summary>
+        public bool HasMatchWithSpecial(int targetSlotId, bool requireStar, bool requireShield, bool requireAny)
+        {
+            List<TrajectoryData> candidates = GetTrajectoriesBySlot(targetSlotId);
+            if (candidates == null || candidates.Count == 0) return false;
+
+            foreach (var traj in candidates)
+            {
+                if (requireStar && !traj.hitSpecialStar) continue;
+                if (requireShield && !traj.hitSpecialShield) continue;
+                if (requireAny && !traj.hitSpecialStar && !traj.hitSpecialShield) continue;
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

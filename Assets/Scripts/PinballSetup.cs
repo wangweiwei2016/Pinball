@@ -160,8 +160,17 @@ public class PinballSetup : MonoBehaviour
         launcherSprite.sprite = MakeRectSprite(new Color(0.8f, 0.5f, 0.95f));
         launcherSprite.sortingOrder = 2;
         var launcherComp = launcher.AddComponent<Launcher>();
-        launcherComp.launchSpeed = 28f;
+        //launcherComp.launchSpeed = 28f;
         launcherComp.targetSlotIndex = -1;
+        launcherComp.spawnPosition = new Vector2(launcherX, launcherY + 0.2f);
+        launcherComp.gravityScale = gravityScale;
+
+        // 让 Ball 层自碰撞禁用（球与球之间不碰撞）
+        int ballLayer = LayerMask.NameToLayer("Ball");
+        if (ballLayer >= 0)
+        {
+            Physics2D.IgnoreLayerCollision(ballLayer, ballLayer, true);
+        }
 
         // ---------- 撞击器（避开右侧通道） ----------
         // 图片风格：自然分散布局，非正五边形环形
@@ -296,42 +305,23 @@ public class PinballSetup : MonoBehaviour
         CreateSpecialBumper("SpecialStar", new Vector2(-2.5f, 1.2f), 0.5f, rootTransform, new Color(1f, 0.85f, 0.2f));
         CreateSpecialBumper("SpecialShield", new Vector2(1.5f, 1.2f), 0.5f, rootTransform, new Color(0.4f, 0.7f, 1f));
 
-        // ---------- 球（初始在发射通道底部，静止锁定） ----------
-        Vector2 ballStart = new Vector2(launcherX, launcherY + 0.2f);
-        var ballGo = new GameObject("Ball");
-        ballGo.transform.SetParent(rootTransform, false);
-        ballGo.transform.position = ballStart;
-        ballGo.transform.localScale = new Vector3(0.4f, 0.4f, 1f);
-        var ballRb = ballGo.AddComponent<Rigidbody2D>();
-        ballRb.gravityScale = gravityScale;
-        ballRb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        var ballCol = ballGo.AddComponent<CircleCollider2D>();
-        ballCol.radius = 0.5f;
-        ballCol.sharedMaterial = CreateBouncyMaterial();
-        var ballSprite = ballGo.AddComponent<SpriteRenderer>();
-        ballSprite.sprite = MakeCircleSprite(new Color(1f, 0.95f, 0.85f));
-        ballSprite.sortingOrder = 3;
-        var ball = ballGo.AddComponent<Ball>();
-
-        // ---------- 球路径控制器（可控假物理） ----------
-        var pathController = ballGo.AddComponent<BallPathController>();
+        // ---------- 球生成参数（注入 Launcher，按空格动态创建球） ----------
         // 包含底部奖品槽（0~slotCount-1）+ 中部特殊奖励槽（索引 slotCount）
         float[] slotCenterXs = new float[slotCount + 1];
+        float[] slotCenterYs = new float[slotCount + 1];
         for (int i = 0; i < slotCount; i++)
         {
             slotCenterXs[i] = slotAreaLeft + slotWidth * 0.5f + i * slotWidth;
+            slotCenterYs[i] = slotAreaCenterY;
         }
-        slotCenterXs[slotCount] = 0f; // 特殊奖励槽 X 坐标
+        slotCenterXs[slotCount] = specialSlotX; // 特殊奖励槽 X 坐标
+        slotCenterYs[slotCount] = specialSlotY; // 特殊奖励槽 Y 坐标
 
-        pathController.slotCenterXs = slotCenterXs;
-        pathController.slotAreaCenterY = slotAreaCenterY;
-
-        // ---------- 轨迹回放器 + 录制器（假物理：预录轨迹回放，BallPathController 作为后备） ----------
-        var trajectoryPlayer = ballGo.AddComponent<TrajectoryPlayer>();
-        trajectoryPlayer.ballRb = ballRb;
-        var trajectoryRecorder = ballGo.AddComponent<TrajectoryRecorder>();
-        trajectoryRecorder.ballRb = ballRb;
-        trajectoryRecorder.enableRecording = false; // 编辑器中预录时勾选 true
+        launcherComp.slotCenterXs = slotCenterXs;
+        launcherComp.slotCenterYs = slotCenterYs;
+        // 引导区域：覆盖特殊槽到底部槽之间的区域
+        launcherComp.steerTopY = specialSlotY + 0.8f;
+        launcherComp.steerBottomY = slotBottomY + 0.3f;
 
         // ---------- 摄像机 ----------
         var cam = Camera.main;
@@ -350,7 +340,7 @@ public class PinballSetup : MonoBehaviour
         // ---------- GameManager ----------
         var gmGo = new GameObject("GameManager");
         var gm = gmGo.AddComponent<GameManager>();
-        gm.ball = ball;
+        gm.launcher = launcherComp;
 
         // ---------- 轨迹库（单例，独立 GameObject + DontDestroyOnLoad，
         //           运行时从 Resources/Trajectories 加载预录轨迹） ----------

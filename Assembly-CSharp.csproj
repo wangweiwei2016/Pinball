@@ -42,16 +42,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\PinballSetup.cs" />
+    <Compile Include="Assets\Scripts\TrajectoryPlayer.cs" />
     <Compile Include="Assets\Scripts\Ball.cs" />
+    <Compile Include="Assets\Scripts\TrajectoryRecorder.cs" />
     <Compile Include="Assets\Scripts\Launcher.cs" />
+    <Compile Include="Assets\Scripts\TrajectoryData.cs" />
+    <Compile Include="Assets\Scripts\TrajectoryLibrary.cs" />
     <Compile Include="Assets\Scripts\BallPathController.cs" />
     <Compile Include="Assets\Scripts\Bumper.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Flipper.cs" />
-    <Compile Include="Assets\Scripts\TrajectoryData.cs" />
-    <Compile Include="Assets\Scripts\TrajectoryLibrary.cs" />
-    <Compile Include="Assets\Scripts\TrajectoryRecorder.cs" />
-    <Compile Include="Assets\Scripts\TrajectoryPlayer.cs" />
     <Reference Include="UnityEngine">
       <HintPath>D:\Program Files\Unity 2021.3.57f2\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

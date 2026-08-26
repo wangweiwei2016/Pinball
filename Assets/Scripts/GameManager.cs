@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 using DefaultNamespace;
 
 /// <summary>
-/// 弹珠台总控：分数、生命数、UI 显示、奖品槽判定、游戏结束。
+/// 弹珠台总控：分数、生命数、UI 显示、奖品槽判定、游戏结束、录制模式开关。
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -28,7 +28,17 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
 
     [Header("球")]
-    public Ball ball;
+    public Launcher launcher;
+
+    [Header("录制模式")]
+    [Tooltip("全局录制模式开关。开启后球会记录轨迹并保存为 .asset 文件。")]
+    public bool enableRecording = false;
+
+    [Tooltip("切换录制模式的按键（编辑器 Play 模式生效）。")]
+    public KeyCode recordingToggleKey = KeyCode.F6;
+
+    /// <summary>当前是否处于录制模式（只读，供 Ball/Launcher/TrajectoryRecorder 查询）。</summary>
+    public bool EnableRecording => enableRecording;
 
     private int score;
     private int ballsLeft;
@@ -52,12 +62,18 @@ public class GameManager : MonoBehaviour
         ballsLeft = startingBalls;
         isGameOver = false;
 
-        if (ball == null) ball = FindObjectOfType<Ball>();
+        if (launcher == null) launcher = FindObjectOfType<Launcher>();
 
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
         UpdateUI();
         if (statusText != null) statusText.text = "按空格发射弹珠";
+
+        // 生成初始球（在发射通道待命）
+        if (launcher != null)
+        {
+            launcher.SpawnInitialBall();
+        }
     }
 
     private void ResolveUIReferences()
@@ -86,10 +102,19 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (!isGameOver) return;
-        if (Input.GetKeyDown(KeyCode.R))
+        // F6 切换录制模式
+        if (Input.GetKeyDown(recordingToggleKey))
         {
-            Restart();
+            enableRecording = !enableRecording;
+            Debug.Log($"[GameManager] 录制模式：{(enableRecording ? "开启" : "关闭")}");
+        }
+
+        if (isGameOver)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                Restart();
+            }
         }
     }
 
@@ -106,9 +131,9 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 球进入奖品槽。
+    /// 球进入奖品槽。由 Ball.OnTriggerEnter2D 传入自己。
     /// </summary>
-    public void OnBallEnterSlot(int slotIndex)
+    public void OnBallEnterSlot(int slotIndex, Ball ball)
     {
         if (isGameOver) return;
 
@@ -151,33 +176,25 @@ public class GameManager : MonoBehaviour
                 statusText.text = $"落入槽 {slotIndex + 1}，获得 {slotScore} 分";
         }
 
+        // 销毁入槽的球，并通知 Launcher 减1
+        if (ball != null)
+        {
+            Destroy(ball.gameObject);
+        }
+        if (launcher != null)
+        {
+            launcher.NotifyBallRemoved();
+        }
+
         if (ballsLeft <= 0)
         {
             GameOver();
-        }
-        else
-        {
-            RespawnBall();
-        }
-    }
-
-    private void RespawnBall()
-    {
-        if (ball == null) return;
-        ball.ResetToSpawn();
-        if (statusText != null)
-        {
-            statusText.text = "按空格发射弹珠";
         }
     }
 
     private void GameOver()
     {
         isGameOver = true;
-        if (ball != null)
-        {
-            ball.gameObject.SetActive(false);
-        }
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
         if (statusText != null) statusText.text = "游戏结束  按 R 重开";
     }

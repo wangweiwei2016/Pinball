@@ -1,0 +1,783 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a803442eb6d47ffb6d78b95e00d4857, type: 3}
+  m_Name: slot_4_20260826_143103
+  m_EditorClassIdentifier: 
+  id: 8c818a1311cc4d1e951be2ca59777017
+  targetSlotId: 4
+  totalDuration: 3.7599971
+  startPosition: {x: 3.5, y: -6.226939, z: 0}
+  startVelocity: {x: 0, y: 32, z: 0}
+  frames:
+  - position: {x: 3.5, y: -6.226939, z: 0}
+    velocity: {x: 0, y: 32, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0
+  - position: {x: 3.5, y: -6.226939, z: 0}
+    velocity: {x: 0.3, y: 28, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.02
+  - position: {x: 3.506, y: -5.673218, z: 0}
+    velocity: {x: 0.3, y: 27.68608, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.04
+  - position: {x: 3.512, y: -5.1257744, z: 0}
+    velocity: {x: 0.3, y: 27.372162, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.06
+  - position: {x: 3.5180001, y: -4.5846095, z: 0}
+    velocity: {x: 0.3, y: 27.058243, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.08
+  - position: {x: 3.5240002, y: -4.049723, z: 0}
+    velocity: {x: 0.3, y: 26.744324, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.099999994
+  - position: {x: 3.5300002, y: -3.521115, z: 0}
+    velocity: {x: 0.3, y: 26.430405, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.11999999
+  - position: {x: 3.5360003, y: -2.9987855, z: 0}
+    velocity: {x: 0.3, y: 26.116486, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.13999999
+  - position: {x: 3.5420003, y: -2.4827342, z: 0}
+    velocity: {x: 0.3, y: 25.802567, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.15999998
+  - position: {x: 3.5480003, y: -1.9729612, z: 0}
+    velocity: {x: 0.3, y: 25.488647, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.17999998
+  - position: {x: 3.5540004, y: -1.4694667, z: 0}
+    velocity: {x: 0.3, y: 25.174728, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.19999997
+  - position: {x: 3.5600004, y: -0.9722505, z: 0}
+    velocity: {x: 0.3, y: 24.86081, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.21999997
+  - position: {x: 3.5660005, y: -0.48131272, z: 0}
+    velocity: {x: 0.3, y: 24.54689, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.23999996
+  - position: {x: 3.5720005, y: 0.0033466816, z: 0}
+    velocity: {x: 0.3, y: 24.232971, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.25999996
+  - position: {x: 3.5780005, y: 0.48172772, z: 0}
+    velocity: {x: 0.3, y: 23.919052, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.27999997
+  - position: {x: 3.5840006, y: 0.95383036, z: 0}
+    velocity: {x: 0.3, y: 23.605133, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.29999998
+  - position: {x: 3.5900006, y: 1.4196546, z: 0}
+    velocity: {x: 0.3, y: 23.291214, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.32
+  - position: {x: 3.5900006, y: 1.8790805, z: 0}
+    velocity: {x: -0.3, y: 22.971294, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.34
+  - position: {x: 3.5840006, y: 2.332228, z: 0}
+    velocity: {x: -0.3, y: 22.657375, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.36
+  - position: {x: 3.5780005, y: 2.779097, z: 0}
+    velocity: {x: -0.3, y: 22.343456, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.38000003
+  - position: {x: 3.5720005, y: 3.219688, z: 0}
+    velocity: {x: -0.3, y: 22.029537, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.40000004
+  - position: {x: 3.5660005, y: 3.6540003, z: 0}
+    velocity: {x: -0.3, y: 21.715618, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.42000005
+  - position: {x: 3.5600004, y: 4.082034, z: 0}
+    velocity: {x: -0.3, y: 21.4017, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.44000006
+  - position: {x: 3.5540004, y: 4.50379, z: 0}
+    velocity: {x: -0.3, y: 21.08778, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.46000007
+  - position: {x: 3.5480003, y: 4.919267, z: 0}
+    velocity: {x: -0.3, y: 20.77386, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.48000008
+  - position: {x: 3.3171823, y: 5.019791, z: 0}
+    velocity: {x: -17.847681, y: -3.6578822, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.50000006
+  - position: {x: 2.9602287, y: 4.9403553, z: 0}
+    velocity: {x: -17.847681, y: -3.9718022, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.52000004
+  - position: {x: 2.603275, y: 4.854641, z: 0}
+    velocity: {x: -17.847681, y: -4.2857223, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.54
+  - position: {x: 2.2463214, y: 4.762648, z: 0}
+    velocity: {x: -17.847681, y: -4.5996423, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.56
+  - position: {x: 1.8893678, y: 4.6643767, z: 0}
+    velocity: {x: -17.847681, y: -4.9135623, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.58
+  - position: {x: 1.5324142, y: 4.559827, z: 0}
+    velocity: {x: -17.847681, y: -5.2274823, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.59999996
+  - position: {x: 1.1754606, y: 4.448999, z: 0}
+    velocity: {x: -17.847681, y: -5.5414023, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.61999995
+  - position: {x: 0.81850696, y: 4.3318925, z: 0}
+    velocity: {x: -17.847681, y: -5.8553224, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.6399999
+  - position: {x: 0.46155334, y: 4.2085075, z: 0}
+    velocity: {x: -17.847681, y: -6.1692424, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.6599999
+  - position: {x: 0.104599714, y: 4.078844, z: 0}
+    velocity: {x: -17.847681, y: -6.4831624, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.6799999
+  - position: {x: 0.00989002, y: 3.9446905, z: 0}
+    velocity: {x: 15.016879, y: -6.5494876, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.69999987
+  - position: {x: 0.3102276, y: 3.8074224, z: 0}
+    velocity: {x: 15.016879, y: -6.8634076, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.71999985
+  - position: {x: 0.6105652, y: 3.6638758, z: 0}
+    velocity: {x: 15.016879, y: -7.1773276, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.73999983
+  - position: {x: 0.91090274, y: 3.514051, z: 0}
+    velocity: {x: 15.016879, y: -7.4912477, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.7599998
+  - position: {x: 1.2112403, y: 3.3579476, z: 0}
+    velocity: {x: 15.016879, y: -7.8051677, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.7799998
+  - position: {x: 1.5115778, y: 3.195566, z: 0}
+    velocity: {x: 15.016879, y: -8.119087, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.7999998
+  - position: {x: 1.8119154, y: 3.0269058, z: 0}
+    velocity: {x: 15.016879, y: -8.433007, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.81999975
+  - position: {x: 2.112253, y: 2.8519673, z: 0}
+    velocity: {x: 15.016879, y: -8.746927, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.83999974
+  - position: {x: 2.4125905, y: 2.6707504, z: 0}
+    velocity: {x: 15.016879, y: -9.060847, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.8599997
+  - position: {x: 2.503886, y: 2.4872484, z: 0}
+    velocity: {x: -12.764348, y: -8.819142, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.8799997
+  - position: {x: 2.248599, y: 2.3045871, z: 0}
+    velocity: {x: -12.764348, y: -9.133062, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.8999997
+  - position: {x: 1.9933121, y: 2.1156476, z: 0}
+    velocity: {x: -12.764348, y: -9.446982, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.91999966
+  - position: {x: 1.7380252, y: 1.9204295, z: 0}
+    velocity: {x: -12.764348, y: -9.760902, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.93999964
+  - position: {x: 1.6890465, y: 1.9052317, z: 0}
+    velocity: {x: 7.55757, y: 7.54977, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.9599996
+  - position: {x: 1.9617039, y: 1.9862739, z: 0}
+    velocity: {x: 10.055119, y: 1.7410114, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.9799996
+  - position: {x: 2.1628063, y: 2.0148158, z: 0}
+    velocity: {x: 10.055119, y: 1.4270914, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 0.9999996
+  - position: {x: 2.3639085, y: 2.0370793, z: 0}
+    velocity: {x: 10.055119, y: 1.1131713, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.0199996
+  - position: {x: 2.5650108, y: 2.0530643, z: 0}
+    velocity: {x: 10.055119, y: 0.7992513, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.0399996
+  - position: {x: 2.4586787, y: 2.05681, z: 0}
+    velocity: {x: -8.546852, y: 0.11329189, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.0599996
+  - position: {x: 2.2877417, y: 2.0527973, z: 0}
+    velocity: {x: -8.546852, y: -0.20062813, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.0799996
+  - position: {x: 2.1168046, y: 2.0425065, z: 0}
+    velocity: {x: -8.546852, y: -0.5145482, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.0999995
+  - position: {x: 1.9458675, y: 2.025937, z: 0}
+    velocity: {x: -8.546852, y: -0.8284682, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.1199995
+  - position: {x: 1.7749305, y: 2.0030894, z: 0}
+    velocity: {x: -8.546852, y: -1.1423882, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.1399995
+  - position: {x: 1.6866567, y: 1.8733261, z: 0}
+    velocity: {x: -3.6560318, y: -7.3951674, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.1599995
+  - position: {x: 1.7724607, y: 1.8717936, z: 0}
+    velocity: {x: 5.646135, y: -2.927322, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.1799995
+  - position: {x: 1.918524, y: 1.8896202, z: 0}
+    velocity: {x: 5.9611278, y: -2.4176667, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.1999995
+  - position: {x: 2.0377467, y: 1.8349885, z: 0}
+    velocity: {x: 5.9611278, y: -2.7315867, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.2199994
+  - position: {x: 2.1569693, y: 1.7740784, z: 0}
+    velocity: {x: 5.9611278, y: -3.0455067, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.2399994
+  - position: {x: 2.276192, y: 1.7068899, z: 0}
+    velocity: {x: 5.9611278, y: -3.3594267, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.2599994
+  - position: {x: 2.3954146, y: 1.633423, z: 0}
+    velocity: {x: 5.9611278, y: -3.6733468, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.2799994
+  - position: {x: 2.5146372, y: 1.5536777, z: 0}
+    velocity: {x: 5.9611278, y: -3.9872668, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.2999994
+  - position: {x: 2.571094, y: 1.4687217, z: 0}
+    velocity: {x: -5.066959, y: -4.080625, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.3199993
+  - position: {x: 2.469755, y: 1.3808309, z: 0}
+    velocity: {x: -5.066959, y: -4.394545, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.3399993
+  - position: {x: 2.3684158, y: 1.2866616, z: 0}
+    velocity: {x: -5.066959, y: -4.708465, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.3599993
+  - position: {x: 2.2670767, y: 1.186214, z: 0}
+    velocity: {x: -5.066959, y: -5.022385, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.3799993
+  - position: {x: 2.1907222, y: 1.0757674, z: 0}
+    velocity: {x: 2.5353782, y: -6.411063, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.3999993
+  - position: {x: 2.3345602, y: 0.9245175, z: 0}
+    velocity: {x: 2.5353782, y: -6.724983, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.4199992
+  - position: {x: 2.3852677, y: 0.78373945, z: 0}
+    velocity: {x: 2.5353782, y: -7.038903, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.4399992
+  - position: {x: 2.4359753, y: 0.636683, z: 0}
+    velocity: {x: 2.5353782, y: -7.3528233, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.4599992
+  - position: {x: 2.486683, y: 0.48334813, z: 0}
+    velocity: {x: 2.5353782, y: -7.6667433, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.4799992
+  - position: {x: 2.5373905, y: 0.32373488, z: 0}
+    velocity: {x: 2.5353782, y: -7.9806633, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.4999992
+  - position: {x: 2.588098, y: 0.15784322, z: 0}
+    velocity: {x: 2.5353782, y: -8.294583, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.5199991
+  - position: {x: 2.56689, y: -0.013076037, z: 0}
+    velocity: {x: -2.1550715, y: -8.514694, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.5399991
+  - position: {x: 2.5237885, y: -0.18964832, z: 0}
+    velocity: {x: -2.1550715, y: -8.828614, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.5599991
+  - position: {x: 2.4806871, y: -0.372499, z: 0}
+    velocity: {x: -2.1550715, y: -9.142534, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.5799991
+  - position: {x: 2.4375858, y: -0.5616281, z: 0}
+    velocity: {x: -2.1550715, y: -9.456454, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.5999991
+  - position: {x: 2.3944845, y: -0.7570356, z: 0}
+    velocity: {x: -2.1550715, y: -9.770374, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.619999
+  - position: {x: 2.3513832, y: -0.9587215, z: 0}
+    velocity: {x: -2.1550715, y: -10.084294, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.639999
+  - position: {x: 2.308282, y: -1.1666858, z: 0}
+    velocity: {x: -2.1550715, y: -10.398214, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.659999
+  - position: {x: 2.2651806, y: -1.3809285, z: 0}
+    velocity: {x: -2.1550715, y: -10.712134, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.679999
+  - position: {x: 2.2220793, y: -1.6014496, z: 0}
+    velocity: {x: -2.1550715, y: -11.026054, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.699999
+  - position: {x: 2.178978, y: -1.8282491, z: 0}
+    velocity: {x: -2.1550715, y: -11.339974, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.719999
+  - position: {x: 2.1358767, y: -2.061327, z: 0}
+    velocity: {x: -2.1550715, y: -11.653894, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.7399989
+  - position: {x: 2.0927753, y: -2.3006833, z: 0}
+    velocity: {x: -2.1550715, y: -11.967814, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.7599989
+  - position: {x: 2.049674, y: -2.546318, z: 0}
+    velocity: {x: -2.1550715, y: -12.281734, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.7799989
+  - position: {x: 2.0065727, y: -2.7982311, z: 0}
+    velocity: {x: -2.1550715, y: -12.5956545, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.7999989
+  - position: {x: 1.9634713, y: -3.0564227, z: 0}
+    velocity: {x: -2.1550715, y: -12.9095745, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.8199989
+  - position: {x: 1.9733, y: -3.169055, z: 0}
+    velocity: {x: 5.8294425, y: 9.761019, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.8399988
+  - position: {x: 2.0898888, y: -2.980113, z: 0}
+    velocity: {x: 5.8294425, y: 9.447099, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.8599988
+  - position: {x: 2.2064776, y: -2.7974494, z: 0}
+    velocity: {x: 5.8294425, y: 9.133179, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.8799988
+  - position: {x: 2.3230665, y: -2.6210642, z: 0}
+    velocity: {x: 5.8294425, y: 8.819259, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.8999988
+  - position: {x: 2.4396553, y: -2.4509573, z: 0}
+    velocity: {x: 5.8294425, y: 8.505339, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.9199988
+  - position: {x: 2.5562441, y: -2.287129, z: 0}
+    velocity: {x: 5.8294425, y: 8.191419, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.9399987
+  - position: {x: 2.5379667, y: -2.1320887, z: 0}
+    velocity: {x: -4.955026, y: 7.6618094, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.9599987
+  - position: {x: 2.4388661, y: -1.9851309, z: 0}
+    velocity: {x: -4.955026, y: 7.3478894, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.9799987
+  - position: {x: 2.3397655, y: -1.8444515, z: 0}
+    velocity: {x: -4.955026, y: 7.0339694, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 1.9999987
+  - position: {x: 2.240665, y: -1.7100506, z: 0}
+    velocity: {x: -4.955026, y: 6.7200494, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.0199988
+  - position: {x: 2.1415644, y: -1.581928, z: 0}
+    velocity: {x: -4.955026, y: 6.4061294, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.0399988
+  - position: {x: 2.0424638, y: -1.4600838, z: 0}
+    velocity: {x: -4.955026, y: 6.0922093, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.0599988
+  - position: {x: 1.9433633, y: -1.3445181, z: 0}
+    velocity: {x: -4.955026, y: 5.7782893, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.0799987
+  - position: {x: 1.8442628, y: -1.2352307, z: 0}
+    velocity: {x: -4.955026, y: 5.4643693, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.0999987
+  - position: {x: 1.7451624, y: -1.1322217, z: 0}
+    velocity: {x: -4.955026, y: 5.1504493, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.1199987
+  - position: {x: 1.6460619, y: -1.0354911, z: 0}
+    velocity: {x: -4.955026, y: 4.8365293, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.1399987
+  - position: {x: 1.5469614, y: -0.9450389, z: 0}
+    velocity: {x: -4.955026, y: 4.522609, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.1599987
+  - position: {x: 1.447861, y: -0.8608651, z: 0}
+    velocity: {x: -4.955026, y: 4.208689, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.1799986
+  - position: {x: 1.3487605, y: -0.7829697, z: 0}
+    velocity: {x: -4.955026, y: 3.8947692, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.1999986
+  - position: {x: 1.24966, y: -0.7113527, z: 0}
+    velocity: {x: -4.955026, y: 3.5808492, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.2199986
+  - position: {x: 1.1505595, y: -0.6460141, z: 0}
+    velocity: {x: -4.955026, y: 3.2669291, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.2399986
+  - position: {x: 1.0514591, y: -0.58695394, z: 0}
+    velocity: {x: -4.955026, y: 2.9530091, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.2599986
+  - position: {x: 0.95235854, y: -0.5341722, z: 0}
+    velocity: {x: -4.955026, y: 2.639089, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.2799985
+  - position: {x: 0.853258, y: -0.4876688, z: 0}
+    velocity: {x: -4.955026, y: 2.325169, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.2999985
+  - position: {x: 0.7541575, y: -0.44744384, z: 0}
+    velocity: {x: -4.955026, y: 2.011249, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.3199985
+  - position: {x: 0.65505695, y: -0.41349727, z: 0}
+    velocity: {x: -4.955026, y: 1.697329, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.3399985
+  - position: {x: 0.5559564, y: -0.3858291, z: 0}
+    velocity: {x: -4.955026, y: 1.383409, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.3599985
+  - position: {x: 0.4568559, y: -0.3644393, z: 0}
+    velocity: {x: -4.955026, y: 1.069489, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.3799984
+  - position: {x: 0.35775536, y: -0.34932792, z: 0}
+    velocity: {x: -4.955026, y: 0.755569, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.3999984
+  - position: {x: 0.25865483, y: -0.34049493, z: 0}
+    velocity: {x: -4.955026, y: 0.44164896, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.4199984
+  - position: {x: 0.17488073, y: -0.3653049, z: 0}
+    velocity: {x: -2.695552, y: -3.8507516, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.4399984
+  - position: {x: 0.13390394, y: -0.47561643, z: 0}
+    velocity: {x: -2.695552, y: -4.164672, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.4599984
+  - position: {x: 0.07999289, y: -0.5651883, z: 0}
+    velocity: {x: -2.695552, y: -4.478592, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.4799984
+  - position: {x: 0.026081849, y: -0.6610385, z: 0}
+    velocity: {x: -2.695552, y: -4.792512, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.4999983
+  - position: {x: -0.027829193, y: -0.76316714, z: 0}
+    velocity: {x: -2.695552, y: -5.106432, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.5199983
+  - position: {x: -0.08174023, y: -0.87157416, z: 0}
+    velocity: {x: -2.695552, y: -5.420352, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.5399983
+  - position: {x: -0.13565128, y: -0.9862596, z: 0}
+    velocity: {x: -2.695552, y: -5.734272, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.5599983
+  - position: {x: -0.18956232, y: -1.1072234, z: 0}
+    velocity: {x: -2.695552, y: -6.048192, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.5799983
+  - position: {x: -0.24347337, y: -1.2344656, z: 0}
+    velocity: {x: -2.695552, y: -6.362112, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.5999982
+  - position: {x: -0.2973844, y: -1.3679862, z: 0}
+    velocity: {x: -2.695552, y: -6.676032, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.6199982
+  - position: {x: -0.3025353, y: -1.4034184, z: 0}
+    velocity: {x: 3.129507, y: 5.530877, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.6399982
+  - position: {x: -0.23994516, y: -1.2990793, z: 0}
+    velocity: {x: 3.129507, y: 5.216957, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.6599982
+  - position: {x: -0.17735502, y: -1.2010186, z: 0}
+    velocity: {x: 3.129507, y: 4.903037, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.6799982
+  - position: {x: -0.114764884, y: -1.1092362, z: 0}
+    velocity: {x: 3.129507, y: 4.589117, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.6999981
+  - position: {x: -0.052174747, y: -1.0237323, z: 0}
+    velocity: {x: 3.129507, y: 4.275197, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.7199981
+  - position: {x: 0.01041539, y: -0.94450676, z: 0}
+    velocity: {x: 3.129507, y: 3.961277, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.739998
+  - position: {x: 0.07300553, y: -0.8715596, z: 0}
+    velocity: {x: 3.129507, y: 3.647357, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.759998
+  - position: {x: 0.13559566, y: -0.8048909, z: 0}
+    velocity: {x: 3.129507, y: 3.333437, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.779998
+  - position: {x: 0.1981858, y: -0.7445005, z: 0}
+    velocity: {x: 3.129507, y: 3.019517, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.799998
+  - position: {x: 0.26077592, y: -0.69038856, z: 0}
+    velocity: {x: 3.129507, y: 2.705597, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.819998
+  - position: {x: 0.32336605, y: -0.642555, z: 0}
+    velocity: {x: 3.129507, y: 2.391677, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.839998
+  - position: {x: 0.38595617, y: -0.60099983, z: 0}
+    velocity: {x: 3.129507, y: 2.077757, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.859998
+  - position: {x: 0.4485463, y: -0.5657231, z: 0}
+    velocity: {x: 3.129507, y: 1.7638369, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.879998
+  - position: {x: 0.5111364, y: -0.5367248, z: 0}
+    velocity: {x: 3.129507, y: 1.4499168, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.899998
+  - position: {x: 0.57372653, y: -0.5140049, z: 0}
+    velocity: {x: 3.129507, y: 1.1359968, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.919998
+  - position: {x: 0.63631666, y: -0.49756336, z: 0}
+    velocity: {x: 3.129507, y: 0.8220768, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.939998
+  - position: {x: 0.6989068, y: -0.48740023, z: 0}
+    velocity: {x: 3.129507, y: 0.5081568, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.959998
+  - position: {x: 0.7614969, y: -0.4835155, z: 0}
+    velocity: {x: 3.129507, y: 0.19423676, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.9799979
+  - position: {x: 0.824087, y: -0.48590916, z: 0}
+    velocity: {x: 3.129507, y: -0.119683266, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 2.9999979
+  - position: {x: 0.88667715, y: -0.49458122, z: 0}
+    velocity: {x: 3.129507, y: -0.4336033, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.0199978
+  - position: {x: 0.94926727, y: -0.5095317, z: 0}
+    velocity: {x: 3.129507, y: -0.7475233, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.0399978
+  - position: {x: 1.0118574, y: -0.5307605, z: 0}
+    velocity: {x: 3.129507, y: -1.0614433, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.0599978
+  - position: {x: 1.0744475, y: -0.5582678, z: 0}
+    velocity: {x: 3.129507, y: -1.3753633, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.0799978
+  - position: {x: 1.1370376, y: -0.5920534, z: 0}
+    velocity: {x: 3.129507, y: -1.6892834, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.0999978
+  - position: {x: 1.1996278, y: -0.6321175, z: 0}
+    velocity: {x: 3.129507, y: -2.0032034, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.1199977
+  - position: {x: 1.2622179, y: -0.67846, z: 0}
+    velocity: {x: 3.129507, y: -2.3171234, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.1399977
+  - position: {x: 1.324808, y: -0.7310809, z: 0}
+    velocity: {x: 3.129507, y: -2.6310434, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.1599977
+  - position: {x: 1.3873981, y: -0.7899802, z: 0}
+    velocity: {x: 3.129507, y: -2.9449635, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.1799977
+  - position: {x: 1.4499882, y: -0.85515785, z: 0}
+    velocity: {x: 3.129507, y: -3.2588835, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.1999977
+  - position: {x: 1.5125784, y: -0.9266139, z: 0}
+    velocity: {x: 3.129507, y: -3.5728035, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.2199976
+  - position: {x: 1.5751685, y: -1.0043484, z: 0}
+    velocity: {x: 3.129507, y: -3.8867235, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.2399976
+  - position: {x: 1.6377586, y: -1.0883613, z: 0}
+    velocity: {x: 3.129507, y: -4.2006435, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.2599976
+  - position: {x: 1.7003487, y: -1.1786525, z: 0}
+    velocity: {x: 3.129507, y: -4.5145636, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.2799976
+  - position: {x: 1.7629389, y: -1.2752222, z: 0}
+    velocity: {x: 3.129507, y: -4.8284836, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.2999976
+  - position: {x: 1.825529, y: -1.3780702, z: 0}
+    velocity: {x: 3.129507, y: -5.1424036, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.3199975
+  - position: {x: 1.8881191, y: -1.4871967, z: 0}
+    velocity: {x: 3.129507, y: -5.4563236, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.3399975
+  - position: {x: 1.9507092, y: -1.6026015, z: 0}
+    velocity: {x: 3.129507, y: -5.7702436, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.3599975
+  - position: {x: 2.0132995, y: -1.7242848, z: 0}
+    velocity: {x: 3.129507, y: -6.0841637, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.3799975
+  - position: {x: 2.0758896, y: -1.8522464, z: 0}
+    velocity: {x: 3.129507, y: -6.3980837, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.3999975
+  - position: {x: 2.1384797, y: -1.9864864, z: 0}
+    velocity: {x: 3.129507, y: -6.7120037, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.4199975
+  - position: {x: 2.2010698, y: -2.1270049, z: 0}
+    velocity: {x: 3.129507, y: -7.0259237, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.4399974
+  - position: {x: 2.26366, y: -2.2738018, z: 0}
+    velocity: {x: 3.129507, y: -7.3398438, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.4599974
+  - position: {x: 2.32625, y: -2.426877, z: 0}
+    velocity: {x: 3.129507, y: -7.653764, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.4799974
+  - position: {x: 2.3888402, y: -2.5862308, z: 0}
+    velocity: {x: 3.129507, y: -7.967684, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.4999974
+  - position: {x: 2.4514303, y: -2.7518628, z: 0}
+    velocity: {x: 3.129507, y: -8.281604, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.5199974
+  - position: {x: 2.5140204, y: -2.9237733, z: 0}
+    velocity: {x: 3.129507, y: -8.595524, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.5399973
+  - position: {x: 2.5766106, y: -3.101962, z: 0}
+    velocity: {x: 3.129507, y: -8.909444, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.5599973
+  - position: {x: 2.5665543, y: -3.2851639, z: 0}
+    velocity: {x: -2.660081, y: -9.107573, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.5799973
+  - position: {x: 2.5133526, y: -3.4735937, z: 0}
+    velocity: {x: -2.660081, y: -9.421493, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.5999973
+  - position: {x: 2.460151, y: -3.668302, z: 0}
+    velocity: {x: -2.660081, y: -9.735413, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.6199973
+  - position: {x: 2.4069493, y: -3.8692887, z: 0}
+    velocity: {x: -2.660081, y: -10.049333, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.6399972
+  - position: {x: 2.3537476, y: -4.076554, z: 0}
+    velocity: {x: -2.660081, y: -10.363253, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.6599972
+  - position: {x: 2.300546, y: -4.290097, z: 0}
+    velocity: {x: -2.660081, y: -10.677173, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.6799972
+  - position: {x: 2.2473443, y: -4.509919, z: 0}
+    velocity: {x: -2.660081, y: -10.991093, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.6999972
+  - position: {x: 2.1941426, y: -4.7360196, z: 0}
+    velocity: {x: -2.660081, y: -11.305013, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.7199972
+  - position: {x: 2.140941, y: -4.968398, z: 0}
+    velocity: {x: -2.660081, y: -11.618933, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.7399971
+  - position: {x: 2.0877392, y: -5.207055, z: 0}
+    velocity: {x: -2.660081, y: -11.932853, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.7599971
+  - position: {x: 2.0345376, y: -5.4519906, z: 0}
+    velocity: {x: -2.660081, y: -12.246773, z: 0}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    timestamp: 3.7599971
+  bounceCount: 0
+  difficulty: 
+  qualityScore: 0

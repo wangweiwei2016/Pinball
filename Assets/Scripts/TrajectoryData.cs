@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +27,13 @@ namespace DefaultNamespace
         public int bounceCount;              // 弹跳次数
         public string difficulty;           // 难度标签
         public float qualityScore;          // 质量评分（用于筛选）
+
+        [Header("特殊撞击器记录")]
+        [Tooltip("本轨迹录制过程中，球是否撞击过 SpecialStar 撞击器。")]
+        public bool hitSpecialStar;
+
+        [Tooltip("本轨迹录制过程中，球是否撞击过 SpecialShield 撞击器。")]
+        public bool hitSpecialShield;
     }
 
     /// <summary>

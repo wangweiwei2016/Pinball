@@ -28,6 +28,7 @@ public class Ball : MonoBehaviour
     private Vector2 spawnPosition;
     private BallPathController pathController;
     private TrajectoryPlayer trajectoryPlayer;
+    private TrajectoryRecorder trajectoryRecorder;
     private bool inSlot = false;
 
     /// <summary>球是否处于锁定静止状态。</summary>
@@ -61,6 +62,7 @@ public class Ball : MonoBehaviour
         spawnPosition = transform.position;
         pathController = GetComponent<BallPathController>();
         trajectoryPlayer = GetComponent<TrajectoryPlayer>();
+        trajectoryRecorder = GetComponent<TrajectoryRecorder>();
     }
 
     private void FixedUpdate()
@@ -107,28 +109,48 @@ public class Ball : MonoBehaviour
         // 回放期间球为运动学体，不参与真实碰撞反弹
         if (trajectoryPlayer != null && trajectoryPlayer.IsPlaying) return;
 
+        bool hasPathControl = pathController != null && pathController.steeringEnabled && pathController.targetSlotIndex >= 0;
+
         var bumper = collision.collider.GetComponent<Bumper>();
-        if (bumper != null && bumper.isControllable && pathController != null)
+
+        if (bumper != null)
         {
-            ContactPoint2D contact = collision.GetContact(0);
-            Vector2 collisionPoint = contact.point;
-            Vector2 normal = contact.normal;
+            // 撞击器碰撞
+            if (bumper.isControllable && hasPathControl)
+            {
+                // 可控撞击器：路径控制器介入反弹方向
+                ApplyControlledBounce(collision, collision.collider.transform.position);
+            }
+            // 非可控撞击器：Bumper.OnCollisionEnter2D 已处理反弹速度
+            // 此处不再干预
 
-            // 计算自然反弹速度
-            Vector2 incomingVelocity = rb.velocity;
-            float bounciness = 0.85f;
-            Vector2 naturalBounce = Vector2.Reflect(incomingVelocity, normal) * bounciness;
-
-            // 让路径控制器修正反弹方向
-            Vector2 controlledBounce = pathController.ModifyBounceVelocity(naturalBounce, collisionPoint);
-
-            // 将球沿法线推出撞击器，防止物理引擎再次处理碰撞
-            float separation = 0.05f;
-            transform.position = (Vector2)transform.position + normal * separation;
-
-            // 应用修正后的反弹
-            rb.velocity = controlledBounce;
+            // 录制模式下通知特殊撞击器碰撞
+            if (trajectoryRecorder != null && trajectoryRecorder.IsRecording)
+            {
+                trajectoryRecorder.NotifySpecialHit(collision.collider.name);
+            }
         }
+        else if (hasPathControl)
+        {
+            // 墙体等非撞击器碰撞：也应用路径控制
+            ApplyControlledBounce(collision, collision.collider.transform.position);
+        }
+    }
+
+    private void ApplyControlledBounce(Collision2D collision, Vector2 colliderPos)
+    {
+        ContactPoint2D contact = collision.GetContact(0);
+        Vector2 collisionPoint = contact.point;
+
+        // rb.velocity 已经是物理引擎处理完碰撞后的自然反弹速度
+        Vector2 naturalBounce = rb.velocity;
+
+        Vector2 controlledBounce = pathController.ModifyBounceVelocity(naturalBounce, collisionPoint);
+
+        float separation = 0.05f;
+        transform.position = (Vector2)transform.position + contact.normal * separation;
+
+        rb.velocity = controlledBounce;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -141,7 +163,7 @@ public class Ball : MonoBehaviour
             if (GameManager.Instance != null)
             {
                 int slotIndex = ExtractSlotIndex(other.name);
-                GameManager.Instance.OnBallEnterSlot(slotIndex);
+                GameManager.Instance.OnBallEnterSlot(slotIndex, this);
             }
         }
     }
@@ -158,23 +180,6 @@ public class Ball : MonoBehaviour
             }
         }
         return -1;
-    }
-
-    /// <summary>
-    /// 把球放回初始位置并清零速度，并重新锁定等待发射。
-    /// </summary>
-    public void ResetToSpawn()
-    {
-        LockAndReset();
-        if (pathController != null)
-        {
-            pathController.ClearTarget();
-            pathController.steeringEnabled = true;
-        }
-        if (trajectoryPlayer != null && trajectoryPlayer.IsPlaying)
-        {
-            trajectoryPlayer.Stop();
-        }
     }
 
     private void OnDrawGizmosSelected()
