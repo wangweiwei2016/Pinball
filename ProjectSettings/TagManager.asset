@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Slot
   - SpBumper
+  - Ball
+  - Barrier
   layers:
   - Default
   - TransparentFX
