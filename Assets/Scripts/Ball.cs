@@ -157,7 +157,7 @@ public class Ball : MonoBehaviour
     {
         if (inSlot) return;
 
-        if (other.CompareTag("Slot") || other.name.StartsWith("SlotTrigger"))
+        if (other.CompareTag(Const.TAG_SLOT) || other.name.StartsWith("SlotTrigger"))
         {
             inSlot = true;
             if (GameManager.Instance != null)
@@ -187,5 +187,18 @@ public class Ball : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, GetComponent<CircleCollider2D>() != null
             ? GetComponent<CircleCollider2D>().radius : 0.25f);
+    }
+
+    public void EnableSelf()
+    {
+        Unlock();
+        gameObject.SetActive(true);
+    }
+
+    public void DisableSelf()
+    {
+        LockAndReset();
+        gameObject.SetActive(false);
+        transform.position = Vector3.one * 1000;
     }
 }

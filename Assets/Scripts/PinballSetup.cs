@@ -132,7 +132,7 @@ public class PinballSetup : MonoBehaviour
             var sCol = slotTrigger.AddComponent<BoxCollider2D>();
             sCol.isTrigger = true;
             sCol.size = new Vector2(slotWidth * 0.7f, slotHeight * 0.7f);
-            sCol.tag = "Slot";
+            sCol.tag = Const.TAG_SLOT;
 
             CreateSlotLabel("SlotLabel" + i, slotCenterX, slotBottomY + slotHeight * 0.95f, rootTransform, slotScores[i]);
         }
@@ -267,7 +267,7 @@ public class PinballSetup : MonoBehaviour
         var specialCol = specialTrigger.AddComponent<BoxCollider2D>();
         specialCol.isTrigger = true;
         specialCol.size = new Vector2(specialSlotW * 0.8f, specialSlotH * 0.8f);
-        specialCol.tag = "Slot";
+        specialCol.tag = Const.TAG_SLOT;
 
         CreateSlotLabel("SpecialSlotLabel", specialSlotX, specialSlotY + specialSlotH * 0.55f, rootTransform, 500);
 

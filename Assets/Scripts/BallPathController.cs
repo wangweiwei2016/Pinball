@@ -179,13 +179,24 @@ public class BallPathController : MonoBehaviour
 
         float dist = targetX - rb.position.x;
         if (Mathf.Abs(dist) < 0.05f) return;
-
+        
         float strength = Mathf.Clamp01(1f - Mathf.Abs(dist) / 10f);
         strength = Mathf.Lerp(baseMaxAngle / maxAngle, 1f, strength * steerFalloff);
-
+        
         float targetVX = Mathf.Sign(dist) * maxSteerSpeed * strength;
         float newVX = Mathf.Lerp(rb.velocity.x, targetVX, steerLerpFactor);
-
+        
         rb.velocity = new Vector2(newVX, rb.velocity.y);
+        
+        // if (targetSlotIndex >= 0 && rb != null && rb.velocity.y < -1f)
+        // {
+        //     float dist = Mathf.Abs(targetX - rb.position.x);
+        //     if (dist > 0.05f)
+        //     {
+        //         float steerForce = Mathf.Min(3f, dist * 2f);
+        //         Vector2 steerDir = new Vector2(targetX - rb.position.x, 0f).normalized;
+        //         rb.AddForce(steerDir * steerForce, ForceMode2D.Force);
+        //     }
+        // }
     }
 }

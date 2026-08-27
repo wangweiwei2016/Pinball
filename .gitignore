@@ -16,4 +16,9 @@
 
 /Temp
 
-*.csproj
+/*.csproj
+
+/*.sln
+
+/*.user
+/*.user

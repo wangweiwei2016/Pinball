@@ -177,12 +177,13 @@ public class GameManager : MonoBehaviour
         }
 
         // 销毁入槽的球，并通知 Launcher 减1
-        if (ball != null)
-        {
-            Destroy(ball.gameObject);
-        }
+        // if (ball != null)
+        // {
+        //     Destroy(ball.gameObject);
+        // }
         if (launcher != null)
         {
+            launcher.Recycle(ball);
             launcher.NotifyBallRemoved();
         }
 

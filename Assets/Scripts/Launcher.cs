@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using DefaultNamespace;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// 发球器：按空格连续发射多个小球（上限 maxBalls）。
@@ -52,6 +54,16 @@ public class Launcher : MonoBehaviour
     private bool isContinuousLaunch = false;
     //是否连续发射达到上限
     private bool isContinuousMax = false;
+    private ObjectPool<GameObject> objectPool;
+    private void Start()
+    {
+        objectPool = new ObjectPool<GameObject>(CreateBallGameObject);
+        Collider2D collider = GetComponent<Collider2D>();
+        if (null != collider)
+        {
+            collider.isTrigger = false;
+        }
+    }
 
     private void Update()
     {
@@ -84,7 +96,7 @@ public class Launcher : MonoBehaviour
     {
         if (waitingBall != null) return;
 
-        GameObject ballGo = CreateBallGameObject();
+        GameObject ballGo = GetBallGameObjectFromPool();
         var ball = ballGo.GetComponent<Ball>();
         ball.LockAndReset();
         waitingBall = ball;
@@ -102,6 +114,12 @@ public class Launcher : MonoBehaviour
         {
             isContinuousMax = true;
         }
+    }
+
+    public void Recycle(Ball ball)
+    {
+        ball.DisableSelf();
+        objectPool.Free(ball.gameObject);
     }
 
     /// <summary>球入槽时调用，活跃球数 -1。</summary>
@@ -126,6 +144,7 @@ public class Launcher : MonoBehaviour
             Debug.Log($"[Launcher] 已达上限 {maxBalls} 球，本次空格不发射");
             return;
         }
+        Debug.Log($"[Launcher] TryLaunchOneBall(targetSlotIndex={targetSlotIndex}, requireStar={requireStar}, requireShield={requireShield},requireAnySpecial={requireAnySpecial})");
 
         // 使用待命球，或创建新球
         GameObject ballGo;
@@ -136,7 +155,7 @@ public class Launcher : MonoBehaviour
         }
         else
         {
-            ballGo = CreateBallGameObject();
+            ballGo = GetBallGameObjectFromPool();
         }
 
         float speed = launchSpeedArray[Random.Range(0, launchSpeedArray.Length)];
@@ -228,11 +247,18 @@ public class Launcher : MonoBehaviour
     {
         if (activeBallCount == 0 && waitingBall == null)
         {
-            GameObject ballGo = CreateBallGameObject();
+            GameObject ballGo = GetBallGameObjectFromPool();
             var ball = ballGo.GetComponent<Ball>();
             ball.LockAndReset();
             waitingBall = ball;
         }
+    }
+
+    private GameObject GetBallGameObjectFromPool()
+    {
+        GameObject ballGo = objectPool.Allocate();
+        ballGo.GetComponent<Ball>().EnableSelf();
+        return ballGo;
     }
 
     /// <summary>动态创建一个球 GameObject（带所有必要组件）。</summary>
@@ -281,8 +307,8 @@ public class Launcher : MonoBehaviour
     private PhysicsMaterial2D CreateBouncyMaterial()
     {
         var mat = new PhysicsMaterial2D("BouncyMat");
-        mat.bounciness = 0.85f;
-        mat.friction = 0.02f;
+        mat.bounciness = 0.9f;
+        mat.friction = 0.05f;
         return mat;
     }
 
