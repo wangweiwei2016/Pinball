@@ -3,46 +3,44 @@ using UnityEngine.Serialization;
 
 /// <summary>
 /// 球路径控制器：可控假物理碰撞。
-/// 核心思路：球在上半部分自由弹跳（自然物理反弹），
-/// 只有当球下降到目标槽附近区域时，才对反弹方向做轻微角度偏转，
-/// 让球看起来仍在自然弹跳，但最终落入指定槽。
+/// 分阶段引导策略：
+///   - 上半部分（y > freePlayTopY）：完全自由弹跳，不干预
+///   - 中段（midGuideTopY ~ freePlayTopY）：轻微角度偏转 + 小幅水平微调
+///   - 下段（slotY 附近）：强引导，直接设置水平速度向目标靠拢
+/// 这样球在上半场看起来自然弹跳，下半场才逐渐偏向目标。
 /// </summary>
 public class BallPathController : MonoBehaviour
 {
-    [Header("奖品槽布局")]
-    [Tooltip("各槽中心 X 坐标（由 PinballSetup 自动填充）。")]
+    [Header("奖品槽布局")] [Tooltip("各槽中心 X 坐标（由 PinballSetup 自动填充）。")]
     public float[] slotCenterXs = new float[0];
 
     [Tooltip("奖品槽区域中心 Y（由 PinballSetup 自动填充）。")]
     public float[] slotCenterYs = new float[0];
 
-    [Header("引导区域")]
-    [Tooltip("引导介入的最高 Y 阈值（球 Y 低于此值时才开始引导）。")]
-    public float steerTopY = -2f;
+    [Header("引导区域（分阶段）")] [Tooltip("自由弹跳区上界：球 Y 高于此值时不引导（上半部分完全自然）。")]
+    public float freePlayTopY = 0f;
 
-    [Tooltip("引导介入的最低 Y 阈值（球 Y 高于此值时停止引导，避免过度偏转）。")]
-    public float steerBottomY = -6.5f;
+    [Tooltip("中段引导区上界：球 Y 在 [midGuideTopY, freePlayTopY] 之间时轻微引导。")]
+    public float midGuideTopY = -2.5f;
 
-    [Header("控制强度")]
-    [Tooltip("基础最大偏转角（度），碰撞时从自然反弹方向向目标方向偏转的最大角度。")]
-    public float baseMaxAngle = 8f;
+    [Tooltip("强引导区下界：球 Y 低于此值时进入强引导阶段（直逼目标）。")]
+    public float strongGuideY = -5f;
 
-    [Tooltip("靠近目标槽时的最大偏转角（度）。")]
-    public float maxAngle = 25f;
+    [Header("中段引导强度（轻微偏转）")] [Tooltip("中段反弹方向最大偏转角（度）。")]
+    public float midMaxAngle = 12f;
 
-    [Tooltip("引导随距离衰减系数。")]
-    public float steerFalloff = 1.5f;
+    [Tooltip("中段 FixedUpdate 水平微调最大速度。")] public float midSteerSpeed = 3f;
 
-    [Tooltip("球下落阶段额外引导强度。")]
-    public float descentSteerBoost = 1.5f;
+    [Tooltip("中段插值因子。")] public float midLerpFactor = 0.08f;
 
-    [Tooltip("水平引导最大速度（单位/秒），用于 FixedUpdate 微调。")]
-    public float maxSteerSpeed = 4f;
+    [Header("强引导强度（直逼目标）")] [Tooltip("强引导阶段反弹方向最大偏转角（度）。")]
+    public float strongMaxAngle = 40f;
 
-    [Tooltip("FixedUpdate 引导插值因子（越小越柔和）。")]
-    public float steerLerpFactor = 0.04f;
+    [Tooltip("强引导阶段水平速度上限。")] public float strongSteerSpeed = 10f;
 
-    [Tooltip("是否启用实时引导。回放期间会被关闭，让球完全按预录轨迹运动。")]
+    [Tooltip("强引导插值因子（越大越快到位）。")] public float strongLerpFactor = 0.2f;
+
+    [Header("通用")] [Tooltip("是否启用实时引导。回放期间会被关闭。")]
     public bool steeringEnabled = true;
 
     /// <summary>目标槽索引（-1 = 随机）。</summary>
@@ -63,9 +61,7 @@ public class BallPathController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
-    /// <summary>
-    /// 设置目标槽。传 -1 则随机选一个。
-    /// </summary>
+    /// <summary>设置目标槽。传 -1 则随机选一个。</summary>
     public void SetTargetSlot(int index)
     {
         if (slotCenterXs == null || slotCenterXs.Length == 0) return;
@@ -74,89 +70,86 @@ public class BallPathController : MonoBehaviour
         {
             index = Random.Range(0, slotCenterXs.Length);
         }
+
         targetSlotIndex = index;
         targetX = GetSlotCenterX(index);
         targetY = GetSlotCenterY(index);
     }
 
-    /// <summary>
-    /// 清除目标槽（球自由弹跳）。
-    /// </summary>
+    /// <summary>清除目标槽（球自由弹跳）。</summary>
     public void ClearTarget()
     {
         targetSlotIndex = -1;
     }
 
-    /// <summary>
-    /// 根据槽索引获取槽中心 X 坐标。
-    /// </summary>
     public float GetSlotCenterX(int index)
     {
         if (slotCenterXs != null && index >= 0 && index < slotCenterXs.Length)
-        {
             return slotCenterXs[index];
-        }
         return 0f;
     }
 
-    /// <summary>
-    /// 根据槽索引获取槽中心 Y 坐标。
-    /// </summary>
     public float GetSlotCenterY(int index)
     {
         if (slotCenterYs != null && index >= 0 && index < slotCenterYs.Length)
-        {
             return slotCenterYs[index];
-        }
         return 0f;
     }
 
-    /// <summary>
-    /// 球是否处于引导介入区域内。
-    /// </summary>
-    public bool IsInSteeringZone(float y)
+    /// <summary>判断当前处于哪个引导阶段：0=自由，1=中段，2=强引导。</summary>
+    public int GetGuideStage(float y)
     {
-        return y <= steerTopY && y >= steerBottomY;
+        if (y > freePlayTopY) return 0;
+        if (y > strongGuideY) return 1;
+        return 2;
     }
 
     /// <summary>
-    /// 撞击时调用：计算经引导修正后的反弹方向（角度偏移法，更自然）。
-    /// 只在球处于引导区域内时才介入，否则保持自然反弹。
+    /// 撞击时调用：计算经引导修正后的反弹方向。
+    /// 自由阶段保持自然反弹，中段轻微偏转，强引导阶段大幅偏转向目标。
     /// </summary>
     public Vector2 ModifyBounceDirection(Vector2 naturalBounceDir, Vector2 collisionPoint)
     {
         if (targetSlotIndex < 0) return naturalBounceDir;
-        if (!IsInSteeringZone(collisionPoint.y)) return naturalBounceDir;
+
+        int stage = GetGuideStage(collisionPoint.y);
+        if (stage == 0) return naturalBounceDir; // 自由阶段不干预
 
         Vector2 toTarget = new Vector2(targetX - collisionPoint.x, targetY - collisionPoint.y);
         float dist = toTarget.magnitude;
         if (dist < 0.01f) return naturalBounceDir;
 
-        // 计算自然反弹方向与目标方向之间的角度差
         float naturalAngle = Mathf.Atan2(naturalBounceDir.y, naturalBounceDir.x);
         float targetAngle = Mathf.Atan2(toTarget.y, toTarget.x);
         float angleDiff = Mathf.DeltaAngle(naturalAngle * Mathf.Rad2Deg, targetAngle * Mathf.Rad2Deg);
 
-        // 根据距离计算最大允许偏转角
-        float t = Mathf.Clamp01(1f - dist / 10f);
-        float maxAngleDeg = Mathf.Lerp(baseMaxAngle, maxAngle, t * steerFalloff);
-
-        // 下落阶段额外增强
-        if (rb != null && rb.velocity.y < 0f)
+        // 根据阶段和距离计算最大偏转角
+        float maxAngleDeg;
+        if (stage == 1)
         {
-            maxAngleDeg = Mathf.Min(maxAngle * 1.5f, maxAngleDeg * descentSteerBoost);
+            // 中段：距离越近偏转越大
+            float t = Mathf.Clamp01(1f - dist / 8f);
+            maxAngleDeg = Mathf.Lerp(midMaxAngle * 0.3f, midMaxAngle, t);
+        }
+        else
+        {
+            // 强引导：距离越近偏转越大，且整体更强
+            float t = Mathf.Clamp01(1f - dist / 5f);
+            maxAngleDeg = Mathf.Lerp(strongMaxAngle * 0.5f, strongMaxAngle, t);
         }
 
-        // 限制实际偏转不超过最大角度
-        float actualOffset = Mathf.Clamp(angleDiff, -maxAngleDeg, maxAngleDeg);
+        // 下落阶段额外增强
+        if (rb != null && rb.velocity.y < 0f && stage == 2)
+        {
+            maxAngleDeg = Mathf.Min(60f, maxAngleDeg * 1.3f);
+        }
 
+        float actualOffset = Mathf.Clamp(angleDiff, -maxAngleDeg, maxAngleDeg);
         float resultAngle = naturalAngle + actualOffset * Mathf.Deg2Rad;
         return new Vector2(Mathf.Cos(resultAngle), Mathf.Sin(resultAngle));
     }
 
-    /// <summary>
-    /// 撞击时调用：计算经引导修正后的反弹速度。
-    /// </summary>
+    /// <summary>撞击时调用：计算经引导修正后的反弹速度。</summary>
     public Vector2 ModifyBounceVelocity(Vector2 naturalVelocity, Vector2 collisionPoint)
     {
         if (!steeringEnabled || targetSlotIndex < 0) return naturalVelocity;
@@ -172,31 +165,86 @@ public class BallPathController : MonoBehaviour
     {
         if (!steeringEnabled) return;
         if (targetSlotIndex < 0 || rb == null) return;
+        if (null != ball && ball.IsLocked) return;
 
-        // 只有球进入引导区域且处于下降阶段时才介入
-        if (!IsInSteeringZone(rb.position.y)) return;
-        if (rb.velocity.y >= 0f) return;
+        float y = rb.position.y;
+        int stage = GetGuideStage(y);
+        if (stage == 0) return; // 自由阶段不干预
 
         float dist = targetX - rb.position.x;
         if (Mathf.Abs(dist) < 0.05f) return;
-        
-        float strength = Mathf.Clamp01(1f - Mathf.Abs(dist) / 10f);
-        strength = Mathf.Lerp(baseMaxAngle / maxAngle, 1f, strength * steerFalloff);
-        
-        float targetVX = Mathf.Sign(dist) * maxSteerSpeed * strength;
-        float newVX = Mathf.Lerp(rb.velocity.x, targetVX, steerLerpFactor);
-        
-        rb.velocity = new Vector2(newVX, rb.velocity.y);
-        
-        // if (targetSlotIndex >= 0 && rb != null && rb.velocity.y < -1f)
-        // {
-        //     float dist = Mathf.Abs(targetX - rb.position.x);
-        //     if (dist > 0.05f)
-        //     {
-        //         float steerForce = Mathf.Min(3f, dist * 2f);
-        //         Vector2 steerDir = new Vector2(targetX - rb.position.x, 0f).normalized;
-        //         rb.AddForce(steerDir * steerForce, ForceMode2D.Force);
-        //     }
-        // }
+
+        // 上升阶段力度减半（避免把球往上推的观感）
+        bool isDescending = rb.velocity.y < 0f;
+        float verticalFactor = isDescending ? 1f : 0.5f;
+
+        if (stage == 1)
+        {
+            // 中段：轻微水平微调
+            float strength = Mathf.Clamp01(1f - Mathf.Abs(dist) / 8f);
+            float targetVX = Mathf.Sign(dist) * midSteerSpeed * strength * verticalFactor;
+            float newVX = Mathf.Lerp(rb.velocity.x, targetVX, midLerpFactor);
+            rb.velocity = new Vector2(newVX, rb.velocity.y);
+        }
+        else
+        {
+            // 强引导：直接拉向目标
+            float strength = Mathf.Clamp01(1f - Mathf.Abs(dist) / 4f);
+            float targetVX = Mathf.Sign(dist) * strongSteerSpeed * strength * verticalFactor;
+            float newVX = Mathf.Lerp(rb.velocity.x, targetVX, strongLerpFactor);
+            rb.velocity = new Vector2(newVX, rb.velocity.y);
+        }
+    }
+    private void FixedUpdate2()
+    {
+        if (!steeringEnabled || targetSlotIndex < 0 || rb == null) return;
+        if (ball != null && ball.IsLocked) return;
+
+        float y = rb.position.y;
+        int stage = GetGuideStage(y);
+        if (stage == 0) return;
+
+        // 到目标的方向
+        Vector2 toTarget = new Vector2(targetX - rb.position.x, targetY - rb.position.y);
+        float dist = toTarget.magnitude;
+        if (dist < 0.1f) return;
+
+        Vector2 toTargetDir = toTarget.normalized;
+        Vector2 currentVel = rb.velocity;
+        float speed = currentVel.magnitude;
+        if (speed < 0.01f) return;
+
+        Vector2 currentDir = currentVel.normalized;
+
+        // 计算当前方向与目标方向的夹角（带符号）
+        float angleDiff = Vector2.SignedAngle(currentDir, toTargetDir);
+        float maxTurnAngle; // 每帧最大转向角度（度）
+
+        // 根据阶段和下落状态决定转向能力
+        bool isDescending = currentVel.y < 0f;
+        float descendBonus = isDescending ? 1.5f : 0.5f; // 下落时转向更灵敏
+
+        if (stage == 1) // 中段
+        {
+            maxTurnAngle = 3f * descendBonus; // 每帧最多转3度
+        }
+        else // 强引导
+        {
+            // 距离越近转向越强，但限制最大角度避免突兀
+            float distFactor = Mathf.Clamp01(1f - dist / 5f);
+            maxTurnAngle = Mathf.Lerp(5f, 15f, distFactor) * descendBonus;
+        }
+
+        // 限制实际转向角度
+        float turnAngle = Mathf.Clamp(angleDiff, -maxTurnAngle, maxTurnAngle);
+
+        // 旋转当前速度方向
+        Vector2 newDir = Quaternion.Euler(0, 0, turnAngle) * currentDir;
+        Vector2 newVel = newDir * speed;
+
+        // **关键：用冲量而非直接赋值**，瞬间改变速度但物理引擎会处理后续
+        rb.velocity = newVel; // 直接赋值在这里反而是安全的，因为物理引擎下一帧会重新计算
+        // 如果希望更物理，可以用：
+        // rb.AddForce((newVel - currentVel) * rb.mass, ForceMode2D.Impulse);
     }
 }

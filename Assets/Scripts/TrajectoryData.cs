@@ -23,17 +23,15 @@ namespace DefaultNamespace
         [Header("轨迹帧数据")]
         public List<TrajectoryFrame> frames; // 所有帧
 
-        [Header("元数据（可选）")]
-        public int bounceCount;              // 弹跳次数
-        public string difficulty;           // 难度标签
-        public float qualityScore;          // 质量评分（用于筛选）
-
         [Header("特殊撞击器记录")]
-        [Tooltip("本轨迹录制过程中，球是否撞击过 SpecialStar 撞击器。")]
-        public bool hitSpecialStar;
+        [Tooltip("本轨迹录制过程中，球撞击 SpecialStar 撞击器的次数。")]
+        public int starHitCount;
 
-        [Tooltip("本轨迹录制过程中，球是否撞击过 SpecialShield 撞击器。")]
-        public bool hitSpecialShield;
+        [Tooltip("本轨迹录制过程中，球撞击 SpecialShield 撞击器的次数。")]
+        public int shieldHitCount;
+
+        /// <summary>是否撞过任意一种特殊撞击器。</summary>
+        public bool hasAnySpecialHit => starHitCount > 0 || shieldHitCount > 0;
     }
 
     /// <summary>

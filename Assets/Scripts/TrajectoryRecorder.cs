@@ -31,9 +31,9 @@ namespace DefaultNamespace
         private Vector3 startPosition;
         private Vector3 startVelocity;
 
-        // 特殊撞击器碰撞标志
-        private bool hitStar = false;
-        private bool hitShield = false;
+        // 特殊撞击器碰撞次数
+        private int starHitCount = 0;
+        private int shieldHitCount = 0;
 
         /// <summary>是否正在录制。</summary>
         public bool IsRecording => isRecording;
@@ -63,8 +63,8 @@ namespace DefaultNamespace
             recordedFrames.Clear();
             timer = 0f;
             isRecording = true;
-            hitStar = false;
-            hitShield = false;
+            starHitCount = 0;
+            shieldHitCount = 0;
 
             // 确保真实物理开启
             ballRb.isKinematic = false;
@@ -86,16 +86,16 @@ namespace DefaultNamespace
 
             if (bumperName != null && bumperName.Contains("Star"))
             {
-                hitStar = true;
+                starHitCount++;
             }
             else if (bumperName != null && bumperName.Contains("Shield"))
             {
-                hitShield = true;
+                shieldHitCount++;
             }
         }
 
-        public bool HasHitStar => hitStar;
-        public bool HasHitShield => hitShield;
+        public int StarHitCount => starHitCount;
+        public int ShieldHitCount => shieldHitCount;
 
         private void FixedUpdate()
         {
@@ -175,12 +175,12 @@ namespace DefaultNamespace
             asset.totalDuration = timer;
             asset.startPosition = startPosition;
             asset.startVelocity = startVelocity;
-            asset.hitSpecialStar = hitStar;
-            asset.hitSpecialShield = hitShield;
+            asset.starHitCount = starHitCount;
+            asset.shieldHitCount = shieldHitCount;
 
             string tag = "";
-            if (hitStar) tag += "_star";
-            if (hitShield) tag += "_shield";
+            if (starHitCount > 0) tag += $"_star{starHitCount}";
+            if (shieldHitCount > 0) tag += $"_shield{shieldHitCount}";
             string stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
             string path = $"{folder}/slot_{targetSlotId}{tag}_{stamp}.asset";
             path = AssetDatabase.GenerateUniqueAssetPath(path);
@@ -189,7 +189,7 @@ namespace DefaultNamespace
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 
-            Debug.Log($"[TrajectoryRecorder] 已保存轨迹：{path}（{recordedFrames.Count} 帧，槽位 {targetSlotId}，Star={hitStar}，Shield={hitShield}）");
+            Debug.Log($"[TrajectoryRecorder] 已保存轨迹：{path}（{recordedFrames.Count} 帧，槽位 {targetSlotId}，Star×{starHitCount}，Shield×{shieldHitCount}）");
         }
 #endif
     }

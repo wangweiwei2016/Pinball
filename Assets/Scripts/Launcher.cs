@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using DefaultNamespace;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -26,12 +27,11 @@ public class Launcher : MonoBehaviour
     [Tooltip("强制使用 BallPathController（忽略轨迹回放），调试用。")]
     public bool forcePathController = false;
 
-    [Header("特殊撞击器要求（正常模式过滤轨迹用）")] [Tooltip("只回放撞过 SpecialStar 的轨迹。")]
-    public bool requireStar = false;
+    [FormerlySerializedAs("minStarHits")] [Header("特殊撞击器要求（正常模式过滤轨迹用）")] [Tooltip("要求轨迹撞过 SpecialStar的次数 指定次数。0 = 不要求。")]
+    public int tarStarHits = 0;
 
-    [Tooltip("只回放撞过 SpecialShield 的轨迹。")] public bool requireShield = false;
-
-    [Tooltip("只回放撞过任意一种特殊撞击器的轨迹。")] public bool requireAnySpecial = false;
+    [FormerlySerializedAs("minShieldHits")] [Tooltip("要求轨迹撞过 SpecialShield的次数 指定次数。0 = 不要求。")]
+    public int tarShieldHits = 0;
 
     [Header("球生成参数（由 PinballSetup 注入）")] public Vector2 spawnPosition;
     public float gravityScale = 1.6f;
@@ -42,19 +42,25 @@ public class Launcher : MonoBehaviour
 
     [Header("路径控制参数（由 PinballSetup 注入）")] public float[] slotCenterXs;
     public float[] slotCenterYs;
-    public float steerTopY = -2f;
-    public float steerBottomY = -6.5f;
+    public float freePlayTopY = 0f;
+    public float midGuideTopY = -2.5f;
+    public float strongGuideY = -5f;
 
     private int activeBallCount = 0;
     private Ball waitingBall; // 在发射通道待命的球（不计入 activeBallCount）
 
+    private float continuousCountDown = 0f;
     public float intervalTime = 0.2f;
+
     private float intervalCountdown = 0.2f;
+
     //是否是连续发射
     private bool isContinuousLaunch = false;
+
     //是否连续发射达到上限
     private bool isContinuousMax = false;
     private ObjectPool<GameObject> objectPool;
+
     private void Start()
     {
         objectPool = new ObjectPool<GameObject>(CreateBallGameObject);
@@ -67,21 +73,56 @@ public class Launcher : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(launchKey))
+        if (!isContinuousLaunch && Input.GetKey(launchKey))
         {
-            if (intervalCountdown > 0f)
+            continuousCountDown += Time.deltaTime;
+            if (continuousCountDown > intervalTime)
             {
-                intervalCountdown -= Time.deltaTime;
-                if (intervalCountdown < 0f)
-                {
-                    intervalCountdown = intervalTime;
-                    TryLaunchOneBall();
-                }
+                isContinuousLaunch = true;
+                continuousCountDown = 0f;
             }
         }
-        else if (Input.GetKeyDown(launchKey))
+
+        if (Input.GetKeyUp(launchKey))
+        {
+            continuousCountDown = 0f;
+        }
+
+        // 连续发射模式
+        if (isContinuousLaunch && Input.GetKey(launchKey))
+        {
+            HandleContinuousLaunch();
+            return; // 防止进入单次发射检查
+        }
+
+        // 单次发射模式
+        if (!isContinuousLaunch && Input.GetKeyDown(launchKey))
         {
             TryLaunchOneBall();
+        }
+    }
+
+    private void HandleContinuousLaunch()
+    {
+        // 初始状态立即发射
+        if (intervalCountdown <= 0f)
+        {
+            if (TryLaunchOneBall())
+            {
+                intervalCountdown = intervalTime;
+            }
+
+            return;
+        }
+
+        // 倒计时递减
+        intervalCountdown -= Time.deltaTime;
+        if (intervalCountdown <= 0f)
+        {
+            if (TryLaunchOneBall())
+            {
+                intervalCountdown = intervalTime;
+            }
         }
     }
 
@@ -109,6 +150,7 @@ public class Launcher : MonoBehaviour
         {
             isContinuousLaunch = true;
         }
+
         activeBallCount++;
         if (activeBallCount >= maxBalls)
         {
@@ -137,14 +179,15 @@ public class Launcher : MonoBehaviour
         }
     }
 
-    private void TryLaunchOneBall()
+    private bool TryLaunchOneBall()
     {
         if (isContinuousMax)
         {
             Debug.Log($"[Launcher] 已达上限 {maxBalls} 球，本次空格不发射");
-            return;
+            return false;
         }
-        Debug.Log($"[Launcher] TryLaunchOneBall(targetSlotIndex={targetSlotIndex}, requireStar={requireStar}, requireShield={requireShield},requireAnySpecial={requireAnySpecial})");
+
+        Debug.Log($"[Launcher] TryLaunchOneBall(targetSlotIndex={targetSlotIndex}, tarStarHits={tarStarHits}, tarShieldHits={tarShieldHits})");
 
         // 使用待命球，或创建新球
         GameObject ballGo;
@@ -180,7 +223,7 @@ public class Launcher : MonoBehaviour
             NotifyLaunched();
             NotifyBallAdded();
             SpawnWaitingBallIfNeeded();
-            return;
+            return true;
         }
 
         // ---- 模式 2：强制 BallPathController ----
@@ -195,7 +238,7 @@ public class Launcher : MonoBehaviour
             NotifyLaunched();
             NotifyBallAdded();
             SpawnWaitingBallIfNeeded();
-            return;
+            return true;
         }
 
         // ---- 模式 3：运行时回放优先（带特殊撞击器过滤） ----
@@ -205,11 +248,11 @@ public class Launcher : MonoBehaviour
             if (slot >= 0)
             {
                 TrajectoryData match = TrajectoryLibrary.Instance.FindBestMatch(
-                    slot, startPos, speed, requireStar, requireShield, requireAnySpecial);
+                    slot, startPos, speed, tarStarHits, tarShieldHits);
 
                 if (match != null)
                 {
-                    Debug.Log($"[Launcher] 模式3：轨迹回放 (槽{slot}, Star={match.hitSpecialStar}, Shield={match.hitSpecialShield})");
+                    Debug.Log($"[Launcher] 模式3：轨迹回放 (槽{slot}, Star×{match.starHitCount}, Shield×{match.shieldHitCount})");
                     if (pathController != null)
                     {
                         pathController.ClearTarget();
@@ -223,7 +266,7 @@ public class Launcher : MonoBehaviour
                     NotifyLaunched();
                     NotifyBallAdded();
                     SpawnWaitingBallIfNeeded();
-                    return;
+                    return true;
                 }
 
                 Debug.Log("[Launcher] 模式3：无匹配轨迹，回退到 BallPathController");
@@ -240,6 +283,7 @@ public class Launcher : MonoBehaviour
         NotifyLaunched();
         NotifyBallAdded();
         SpawnWaitingBallIfNeeded();
+        return true;
     }
 
     /// <summary>发射后自动补充一个新的待命球（如果未达上限）。</summary>
@@ -284,16 +328,13 @@ public class Launcher : MonoBehaviour
         ballSprite.sprite = MakeCircleSprite(new Color(1f, 0.95f, 0.85f));
         ballSprite.sortingOrder = 3;
 
-        var ball = ballGo.AddComponent<Ball>();
-        ball.maxSpeed = ballMaxSpeed;
-        ball.minSpeed = ballMinSpeed;
-
         // 路径控制器
         var pathController = ballGo.AddComponent<BallPathController>();
         if (slotCenterXs != null) pathController.slotCenterXs = slotCenterXs;
         if (slotCenterYs != null) pathController.slotCenterYs = slotCenterYs;
-        pathController.steerTopY = steerTopY;
-        pathController.steerBottomY = steerBottomY;
+        pathController.freePlayTopY = freePlayTopY;
+        pathController.midGuideTopY = midGuideTopY;
+        pathController.strongGuideY = strongGuideY;
 
         // 轨迹回放器 + 录制器
         var trajectoryPlayer = ballGo.AddComponent<TrajectoryPlayer>();
@@ -301,13 +342,17 @@ public class Launcher : MonoBehaviour
         var trajectoryRecorder = ballGo.AddComponent<TrajectoryRecorder>();
         trajectoryRecorder.ballRb = ballRb;
 
+        var ball = ballGo.AddComponent<Ball>();
+        ball.maxSpeed = ballMaxSpeed;
+        ball.minSpeed = ballMinSpeed;
+
         return ballGo;
     }
 
     private PhysicsMaterial2D CreateBouncyMaterial()
     {
         var mat = new PhysicsMaterial2D("BouncyMat");
-        mat.bounciness = 0.9f;
+        mat.bounciness = 0.5f; //0.9f;
         mat.friction = 0.05f;
         return mat;
     }

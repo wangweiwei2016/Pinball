@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("分数倍率。")]
     public int scoreMultiplier = 1;
 
+    [Tooltip("无限球数（调试用）。开启后球数不减少，方便反复测试。")]
+    public bool infiniteBalls = false;
+
     [Header("奖品槽分值")]
     [Tooltip("各槽对应的分数。")]
     public int[] slotScores = new int[] { 20, 40, 100, 40, 20 };
@@ -165,8 +168,11 @@ public class GameManager : MonoBehaviour
 
         AddScore(slotScore);
 
-        ballsLeft--;
-        UpdateUI();
+        if (!infiniteBalls)
+        {
+            ballsLeft--;
+            UpdateUI();
+        }
 
         if (statusText != null)
         {

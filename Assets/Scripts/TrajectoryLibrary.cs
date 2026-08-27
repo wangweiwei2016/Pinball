@@ -136,21 +136,22 @@ namespace DefaultNamespace
         }
 
         /// <summary>
-        /// 根据起始位置和力度，匹配最合适的轨迹
+        /// 根据起始位置和力度，匹配最合适的轨迹（无特殊撞击器要求）。
         /// </summary>
         public TrajectoryData FindBestMatch(int targetSlotId, Vector3 launchPos, float launchForce)
         {
-            return FindBestMatch(targetSlotId, launchPos, launchForce, false, false, false);
+            return FindBestMatch(targetSlotId, launchPos, launchForce, 0, 0);
         }
 
         /// <summary>
-        /// 根据起始位置、力度、特殊撞击器要求匹配最合适的轨迹。
-        /// requireStar=true 时只匹配撞过 SpecialStar 的轨迹；
-        /// requireShield=true 时只匹配撞过 SpecialShield 的轨迹；
-        /// 两者皆 false 时不过滤（兼容旧的调用）。
+        /// 根据起始位置、力度、特殊撞击器碰撞次数要求匹配最合适的轨迹。
+        /// minStarHits>0 时要求轨迹至少撞过 Star 指定次数；
+        /// minShieldHits>0 时要求轨迹至少撞过 Shield 指定次数；
+        /// requireAny=true 时要求轨迹撞过任意一种特殊撞击器（次数>0）；
+        /// 三者均为默认值时不过滤。
         /// </summary>
         public TrajectoryData FindBestMatch(int targetSlotId, Vector3 launchPos, float launchForce,
-            bool requireStar, bool requireShield, bool requireAny)
+            int tarStarHits, int tarShieldHits)
         {
             List<TrajectoryData> candidates = GetTrajectoriesBySlot(targetSlotId);
             if (candidates == null || candidates.Count == 0) return null;
@@ -160,10 +161,8 @@ namespace DefaultNamespace
 
             foreach (var traj in candidates)
             {
-                bool hitAny = traj.hitSpecialStar || traj.hitSpecialShield;
-                if (requireStar && !traj.hitSpecialStar) continue;
-                if (requireShield && !traj.hitSpecialShield) continue;
-                if (requireAny && !hitAny) continue;
+                if (tarStarHits > 0 && traj.starHitCount != tarStarHits) continue;
+                if (tarShieldHits > 0 && traj.shieldHitCount != tarShieldHits) continue;
 
                 Vector3 posDiff = traj.startPosition - launchPos;
                 posDiff.y = 0;
@@ -184,18 +183,18 @@ namespace DefaultNamespace
         }
 
         /// <summary>
-        /// 判断指定槽位是否有满足特殊撞击器要求的轨迹。
+        /// 判断指定槽位是否有满足特殊撞击器碰撞次数要求的轨迹。
         /// </summary>
-        public bool HasMatchWithSpecial(int targetSlotId, bool requireStar, bool requireShield, bool requireAny)
+        public bool HasMatchWithSpecial(int targetSlotId, int minStarHits, int minShieldHits, bool requireAny)
         {
             List<TrajectoryData> candidates = GetTrajectoriesBySlot(targetSlotId);
             if (candidates == null || candidates.Count == 0) return false;
 
             foreach (var traj in candidates)
             {
-                if (requireStar && !traj.hitSpecialStar) continue;
-                if (requireShield && !traj.hitSpecialShield) continue;
-                if (requireAny && !traj.hitSpecialStar && !traj.hitSpecialShield) continue;
+                if (minStarHits > 0 && traj.starHitCount < minStarHits) continue;
+                if (minShieldHits > 0 && traj.shieldHitCount < minShieldHits) continue;
+                if (requireAny && traj.starHitCount <= 0 && traj.shieldHitCount <= 0) continue;
                 return true;
             }
             return false;

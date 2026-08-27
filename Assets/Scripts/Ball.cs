@@ -125,7 +125,7 @@ public class Ball : MonoBehaviour
             // 此处不再干预
 
             // 录制模式下通知特殊撞击器碰撞
-            if (trajectoryRecorder != null && trajectoryRecorder.IsRecording)
+            if (trajectoryRecorder != null && trajectoryRecorder.IsRecording && collision.collider.CompareTag(Const.TAG_SPBUMPER))
             {
                 trajectoryRecorder.NotifySpecialHit(collision.collider.name);
             }
@@ -191,7 +191,7 @@ public class Ball : MonoBehaviour
 
     public void EnableSelf()
     {
-        Unlock();
+        transform.position = spawnPosition;
         gameObject.SetActive(true);
     }
 
@@ -199,6 +199,6 @@ public class Ball : MonoBehaviour
     {
         LockAndReset();
         gameObject.SetActive(false);
-        transform.position = Vector3.one * 1000;
+        transform.position = Vector2.one * 1000;
     }
 }

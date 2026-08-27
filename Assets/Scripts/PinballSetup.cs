@@ -319,9 +319,10 @@ public class PinballSetup : MonoBehaviour
 
         launcherComp.slotCenterXs = slotCenterXs;
         launcherComp.slotCenterYs = slotCenterYs;
-        // 引导区域：覆盖特殊槽到底部槽之间的区域
-        launcherComp.steerTopY = specialSlotY + 0.8f;
-        launcherComp.steerBottomY = slotBottomY + 0.3f;
+        // 引导区域：分阶段覆盖整个下落过程
+        launcherComp.freePlayTopY = specialSlotY + 3f;     // 上半部分自由弹跳
+        launcherComp.midGuideTopY = specialSlotY + 0.8f;    // 中段轻微引导
+        launcherComp.strongGuideY = slotBottomY + 1.5f;     // 接近槽位强引导
 
         // ---------- 摄像机 ----------
         var cam = Camera.main;
@@ -382,7 +383,7 @@ public class PinballSetup : MonoBehaviour
         col.radius = 0.5f;
         col.sharedMaterial = CreateBouncyMaterial();
         var bumper = go.AddComponent<Bumper>();
-        bumper.baseScore = 10;
+        bumper.baseScore = 0;
         bumper.isControllable = controllable;
     }
 
@@ -397,6 +398,7 @@ public class PinballSetup : MonoBehaviour
         var col = go.AddComponent<CircleCollider2D>();
         col.radius = 0.5f;
         col.sharedMaterial = CreateBouncyMaterial();
+        col.tag = Const.TAG_SPBUMPER;
         var bumper = go.AddComponent<Bumper>();
         bumper.baseScore = 50;
         bumper.isControllable = true;
