@@ -42,8 +42,18 @@ public class BarTriggerManager : MonoBehaviour
 
     [Tooltip("生成间隔（防止同一触发器短时间内多次触发）")] public float triggerCooldown = 0.5f;
 
+    [Header("奖励触发器设置")] [Tooltip("奖励触发器的宽度（水平方向）")]
+    public float rewardWidth = 2f;
+
+    [Tooltip("奖励触发器的高度（垂直方向）")] public float rewardHeight = 1f;
+
+    [Tooltip("奖励触发器的移动速度")] public float rewardMoveSpeed = 2.5f;
+
+    [Tooltip("奖励触发器的左右移动范围（从初始位置偏移）")] public float rewardMoveRange = 5f;
+
     // 存储三个触发器的数据
     private List<BarTrigger> triggers = new List<BarTrigger>();
+    private List<MoveRewardTrigger> rewardTriggers = new List<MoveRewardTrigger>();
     private Transform triggerParent;
 
     [Header("发射设置")] public KeyCode launchKey = KeyCode.Space;
@@ -52,20 +62,19 @@ public class BarTriggerManager : MonoBehaviour
     {
         triggerParent = new GameObject("BarTriggers").transform;
         triggerParent.SetParent(transform);
-        CreateTriggers();
-
-        //创建边框
-        CreateGameBroad("leftBroad",new Vector2(-3,0),0.5f,10f,Color.black);
-        CreateGameBroad("rightBroad",new Vector2(3,0),0.5f,10f,Color.black);
-        CreateGameBroad("bottomBroad",new Vector2(0,-5f),6f,0.5f,Color.black);
-        
-        // --- 6. 创建底部触发器
-        CreateTargetTriggers();
+        CreateEnv();
+        CreateBarTriggers();
+        CreateRewardTriggers();
     }
 
     private void Update()
     {
         foreach (var trigger in triggers)
+        {
+            trigger.UpdateMovement(Time.deltaTime);
+        }
+
+        foreach (var trigger in rewardTriggers)
         {
             trigger.UpdateMovement(Time.deltaTime);
         }
@@ -76,7 +85,18 @@ public class BarTriggerManager : MonoBehaviour
         }
     }
 
-    private void CreateTriggers()
+    private void CreateEnv()
+    {
+        //创建边框
+        CreateGameBroad("leftBroad", new Vector2(-3, 0), 0.5f, 10f, Color.black);
+        CreateGameBroad("rightBroad", new Vector2(3, 0), 0.5f, 10f, Color.black);
+        CreateGameBroad("bottomBroad", new Vector2(0, -5f), 6f, 0.5f, Color.black);
+
+        //创建底部触发器
+        CreateTargetTriggers();
+    }
+
+    private void CreateBarTriggers()
     {
         for (int i = 0; i < 3; i++)
         {
@@ -121,6 +141,37 @@ public class BarTriggerManager : MonoBehaviour
         }
     }
 
+    private void CreateRewardTriggers()
+    {
+        int triggerCount = 6;
+        float horizontalSpacing = 1.5f;
+        float startX = -2f;
+
+        for (int i = 0; i < triggerCount; i++)
+        {
+            float yPos = -4f;
+
+            GameObject triggerGO = new GameObject($"MoveRewardTrigger_{i}");
+            triggerGO.transform.SetParent(triggerParent);
+
+            MoveRewardTrigger trigger = triggerGO.AddComponent<MoveRewardTrigger>();
+            trigger.SetSize(rewardWidth, rewardHeight);
+            trigger.Initialize(
+                manager: this,
+                triggerIndex: i,
+                yPosition: yPos,
+                startX: startX,
+                horizontalSpacing: horizontalSpacing,
+                moveSpeed: rewardMoveSpeed,
+                moveRange: rewardMoveRange,
+                maxScore: Random.Range(3, 10),
+                resetDelay: 1.5f // ★ 延迟重置时间
+            );
+
+            rewardTriggers.Add(trigger);
+        }
+    }
+
     /// <summary>
     /// 创建可视化元素：显示体（与触发器一样大）+ 边框 + 左右挡板
     /// </summary>
@@ -136,7 +187,7 @@ public class BarTriggerManager : MonoBehaviour
         visualRenderer.color = visualColor;
         visualRenderer.sortingOrder = 10;
         // **关键：显示体大小 = 触发器大小**
-        visualRenderer.size = new Vector2(barWidth, barHeight);
+        visualRenderer.size = new Vector2(rewardWidth, rewardHeight);
 
         // --- 2. 显示体边框（可选）---
         GameObject borderGO = new GameObject("VisualBorder");
@@ -211,7 +262,7 @@ public class BarTriggerManager : MonoBehaviour
         barrierComp.SetOwner(barrierGO.transform.parent);
     }
 
-    private void CreateGameBroad(string name,Vector2 localPos, float width, float height, Color color)
+    private void CreateGameBroad(string name, Vector2 localPos, float width, float height, Color color)
     {
         GameObject barrierGO = new GameObject(name);
         barrierGO.transform.SetParent(transform);
