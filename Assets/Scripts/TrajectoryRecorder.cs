@@ -28,8 +28,8 @@ namespace DefaultNamespace
         private readonly List<TrajectoryFrame> recordedFrames = new List<TrajectoryFrame>();
         private float timer = 0f;
         private bool isRecording = false;
-        private Vector3 startPosition;
-        private Vector3 startVelocity;
+        private Vector2 startPosition;
+        private Vector3 startVelocity;  // 仅用于 .magnitude，保持 Vector3
 
         // 特殊撞击器碰撞次数
         private int starHitCount = 0;
@@ -113,12 +113,9 @@ namespace DefaultNamespace
 
         private void CaptureFrame()
         {
-            recordedFrames.Add(new TrajectoryFrame(
-                ballRb.position,
-                ballRb.velocity,
-                Quaternion.Euler(0f, 0f, ballRb.rotation),
-                timer
-            ));
+            // 时间戳量化为 0.01s 单位的 ushort（上限 ~655s，覆盖 15s 录制上限）
+            ushort scaledTime = (ushort)Mathf.Clamp(Mathf.RoundToInt(timer * 100f), 0, ushort.MaxValue);
+            recordedFrames.Add(new TrajectoryFrame(ballRb.position, scaledTime));
         }
 
         /// <summary>
@@ -169,14 +166,12 @@ namespace DefaultNamespace
             }
 
             var asset = ScriptableObject.CreateInstance<TrajectoryData>();
-            asset.id = Guid.NewGuid().ToString("N");
             asset.targetSlotId = targetSlotId;
             asset.frames = new List<TrajectoryFrame>(recordedFrames);
-            asset.totalDuration = timer;
             asset.startPosition = startPosition;
-            asset.startVelocity = startVelocity;
-            asset.starHitCount = starHitCount;
-            asset.shieldHitCount = shieldHitCount;
+            asset.startSpeed = startVelocity.magnitude;
+            asset.starHitCount = (byte)starHitCount;
+            asset.shieldHitCount = (byte)shieldHitCount;
 
             string tag = "";
             if (starHitCount > 0) tag += $"_star{starHitCount}";

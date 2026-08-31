@@ -100,7 +100,21 @@ public class Bumper : MonoBehaviour
             }
 
             var ballRb = ball.GetComponent<Rigidbody2D>();
-            ballRb.velocity = normal * bounceForce * bounceMultiplier;
+            Vector2 bounceVel = normal * bounceForce * bounceMultiplier;
+
+            // 约束：发射区内速度不受影响
+            if (ball.IsInLaunchZone)
+            {
+                ballRb.velocity = bounceVel;
+            }
+            else
+            {
+                // 约束 1：反弹力 ≤ 重力
+                bounceVel = ball.CapVelocityToGravity(bounceVel);
+                // 约束 2：反弹高度 ≤ 下落起点高度
+                bounceVel = ball.CapBounceHeightByDescend(bounceVel, ball.transform.position);
+                ballRb.velocity = bounceVel;
+            }
         }
         // 可控撞击器：反弹由 Ball.OnCollisionEnter2D 中的路径控制器处理
     }

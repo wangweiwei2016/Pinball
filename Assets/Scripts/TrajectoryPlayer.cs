@@ -67,7 +67,7 @@ namespace DefaultNamespace
 
             TrajectoryFrame f0 = currentTrajectory.frames[0];
             ballRb.position = f0.position;
-            ballRb.rotation = f0.rotation.eulerAngles.z;
+            // 旋转不入档：2D 圆形弹珠无需还原旋转
 
             jitterOffset = jitter
                 ? new Vector3(Random.Range(-jitterAmount, jitterAmount), Random.Range(-jitterAmount, jitterAmount), 0f)
@@ -83,8 +83,9 @@ namespace DefaultNamespace
             playbackTimer += Time.fixedDeltaTime;
 
             var frames = currentTrajectory.frames;
+            // 时间戳以 0.01s 为单位存储为 ushort，回放时换算回秒
             while (currentFrameIndex < frames.Count - 1 &&
-                   frames[currentFrameIndex + 1].timestamp <= playbackTimer)
+                   frames[currentFrameIndex + 1].timestamp * 0.01f <= playbackTimer)
             {
                 currentFrameIndex++;
             }
@@ -97,18 +98,19 @@ namespace DefaultNamespace
 
             TrajectoryFrame cur = frames[currentFrameIndex];
             TrajectoryFrame next = frames[currentFrameIndex + 1];
-            float span = next.timestamp - cur.timestamp;
-            float t = span > 0.0001f ? Mathf.Clamp01((playbackTimer - cur.timestamp) / span) : 0f;
+            float curTime = cur.timestamp * 0.01f;
+            float nextTime = next.timestamp * 0.01f;
+            float span = nextTime - curTime;
+            float t = span > 0.0001f ? Mathf.Clamp01((playbackTimer - curTime) / span) : 0f;
 
-            Vector3 targetPos = Vector3.Lerp(cur.position, next.position, t);
+            Vector2 targetPos = Vector2.Lerp(cur.position, next.position, t);
             if (jitter)
             {
                 // 扰动随进度衰减，保证最终落点精确
-                targetPos += jitterOffset * (1f - t) * ((float)(frames.Count - currentFrameIndex) / frames.Count);
+                targetPos += (Vector2)jitterOffset * (1f - t) * ((float)(frames.Count - currentFrameIndex) / frames.Count);
             }
 
             ballRb.MovePosition(targetPos);
-            ballRb.MoveRotation(Quaternion.Slerp(cur.rotation, next.rotation, t).eulerAngles.z);
 
             TickBumperFeedback();
         }
@@ -136,7 +138,6 @@ namespace DefaultNamespace
                 if (ballRb != null)
                 {
                     ballRb.position = last.position;
-                    ballRb.rotation = last.rotation.eulerAngles.z;
                 }
             }
             isPlaying = false;

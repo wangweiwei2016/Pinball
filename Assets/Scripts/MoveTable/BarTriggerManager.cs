@@ -299,7 +299,7 @@ public class BarTriggerManager : MonoBehaviour
         triggerGO.transform.position = new Vector3(0, -5, 0);
 
         BoxCollider2D triggerCollider = triggerGO.AddComponent<BoxCollider2D>();
-        triggerCollider.size = new Vector2(5, 1);
+        triggerCollider.size = new Vector2(6, 1);
         triggerCollider.isTrigger = true;
 
         triggerGO.AddComponent<TargetTrigger>();

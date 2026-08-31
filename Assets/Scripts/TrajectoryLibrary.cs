@@ -150,7 +150,7 @@ namespace DefaultNamespace
         /// requireAny=true 时要求轨迹撞过任意一种特殊撞击器（次数>0）；
         /// 三者均为默认值时不过滤。
         /// </summary>
-        public TrajectoryData FindBestMatch(int targetSlotId, Vector3 launchPos, float launchForce,
+        public TrajectoryData FindBestMatch(int targetSlotId, Vector2 launchPos, float launchForce,
             int tarStarHits, int tarShieldHits)
         {
             List<TrajectoryData> candidates = GetTrajectoriesBySlot(targetSlotId);
@@ -161,14 +161,14 @@ namespace DefaultNamespace
 
             foreach (var traj in candidates)
             {
-                if (tarStarHits > 0 && traj.starHitCount != tarStarHits) continue;
-                if (tarShieldHits > 0 && traj.shieldHitCount != tarShieldHits) continue;
+                if (traj.starHitCount != tarStarHits) continue;
+                if (traj.shieldHitCount != tarShieldHits) continue;
 
                 Vector3 posDiff = traj.startPosition - launchPos;
                 posDiff.y = 0;
                 float posScore = posDiff.magnitude;
 
-                float forceScore = Mathf.Abs(traj.startVelocity.magnitude - launchForce);
+                float forceScore = Mathf.Abs(traj.startSpeed - launchForce);
 
                 float score = posScore * 0.5f + forceScore * 0.5f;
 

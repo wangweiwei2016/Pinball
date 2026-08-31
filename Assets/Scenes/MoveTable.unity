@@ -184,6 +184,10 @@ MonoBehaviour:
   spawnOffset: {x: 0, y: -0.5}
   spawnInitialVelocity: {x: 0, y: -1}
   triggerCooldown: 0.5
+  rewardWidth: 2
+  rewardHeight: 1
+  rewardMoveSpeed: 2.5
+  rewardMoveRange: 5
   launchKey: 32
 --- !u!1 &1567008130
 GameObject:

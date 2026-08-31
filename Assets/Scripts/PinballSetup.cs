@@ -324,6 +324,10 @@ public class PinballSetup : MonoBehaviour
         launcherComp.midGuideTopY = specialSlotY + 0.8f;    // 中段轻微引导
         launcherComp.strongGuideY = slotBottomY + 1.5f;     // 接近槽位强引导
 
+        // 发射区边界：球在此区域内时速度不受约束、不被引导
+        launcherComp.launchZoneLeftX = channelLeftX;
+        launcherComp.launchZoneTopY = channelTopY + 0.8f;  // 导流板高度
+
         // ---------- 摄像机 ----------
         var cam = Camera.main;
         if (cam == null)

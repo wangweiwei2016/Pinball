@@ -46,6 +46,12 @@ public class Launcher : MonoBehaviour
     public float midGuideTopY = -2.5f;
     public float strongGuideY = -5f;
 
+    [Header("发射区参数（由 PinballSetup 注入）")]
+    [Tooltip("发射通道左墙 x 坐标。")]
+    public float launchZoneLeftX = 3f;
+    [Tooltip("发射通道顶部 y 坐标（导流板高度）。")]
+    public float launchZoneTopY = 5.3f;
+
     private int activeBallCount = 0;
     private Ball waitingBall; // 在发射通道待命的球（不计入 activeBallCount）
 
@@ -345,6 +351,8 @@ public class Launcher : MonoBehaviour
         var ball = ballGo.AddComponent<Ball>();
         ball.maxSpeed = ballMaxSpeed;
         ball.minSpeed = ballMinSpeed;
+        ball.launchZoneLeftX = launchZoneLeftX;
+        ball.launchZoneTopY = launchZoneTopY;
 
         return ballGo;
     }

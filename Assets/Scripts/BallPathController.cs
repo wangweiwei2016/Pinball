@@ -55,6 +55,9 @@ public class BallPathController : MonoBehaviour
     private Ball ball;
     private Rigidbody2D rb;
 
+    /// <summary>最近一次撞墙后的自然反弹速度大小，作为强引导作用力的上限。</summary>
+    private float lastBounceSpeed = 0f;
+
     private void Awake()
     {
         ball = GetComponent<Ball>();
@@ -154,6 +157,12 @@ public class BallPathController : MonoBehaviour
     {
         if (!steeringEnabled || targetSlotIndex < 0) return naturalVelocity;
 
+        // 约束：球在右侧发射区内时不干预反弹（速度不受影响）
+        if (ball != null && ball.IsInLaunchZone) return naturalVelocity;
+
+        // 缓存反弹速度大小，作为强引导区域作用力的上限
+        lastBounceSpeed = naturalVelocity.magnitude;
+
         Vector2 naturalDir = naturalVelocity.normalized;
         float speed = naturalVelocity.magnitude;
 
@@ -166,6 +175,9 @@ public class BallPathController : MonoBehaviour
         if (!steeringEnabled) return;
         if (targetSlotIndex < 0 || rb == null) return;
         if (null != ball && ball.IsLocked) return;
+
+        // 约束：球在右侧发射区内时不引导（速度不受影响）
+        if (ball != null && ball.IsInLaunchZone) return;
 
         float y = rb.position.y;
         int stage = GetGuideStage(y);
@@ -189,12 +201,20 @@ public class BallPathController : MonoBehaviour
         else
         {
             // 强引导：直接拉向目标
+            // 关键约束：引导作用力（目标水平速度）不得超过最近一次撞墙的反弹力大小，
+            // 否则球会被"凭空加速"破坏自然弹跳观感。
+            float bounceSpeed = lastBounceSpeed > 0.01f
+                ? lastBounceSpeed
+                : rb.velocity.magnitude; // 退化：尚未碰撞时用当前速度
+            float maxSteerSpeed = Mathf.Min(strongSteerSpeed, bounceSpeed);
+
             float strength = Mathf.Clamp01(1f - Mathf.Abs(dist) / 4f);
-            float targetVX = Mathf.Sign(dist) * strongSteerSpeed * strength * verticalFactor;
+            float targetVX = Mathf.Sign(dist) * maxSteerSpeed * strength * verticalFactor;
             float newVX = Mathf.Lerp(rb.velocity.x, targetVX, strongLerpFactor);
             rb.velocity = new Vector2(newVX, rb.velocity.y);
         }
     }
+
     private void FixedUpdate2()
     {
         if (!steeringEnabled || targetSlotIndex < 0 || rb == null) return;
