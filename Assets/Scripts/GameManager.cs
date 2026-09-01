@@ -21,8 +21,8 @@ public class GameManager : MonoBehaviour
     public bool infiniteBalls = false;
 
     [Header("奖品槽分值")]
-    [Tooltip("各槽对应的分数。")]
-    public int[] slotScores = new int[] { 20, 40, 100, 40, 20 };
+    [Tooltip("各槽对应的分数，最后一项（索引 slotCount）为中部偏下特殊奖励槽。")]
+    public int[] slotScores = new int[] { 20, 40, 100, 40, 20, 500 };
 
     [Header("UI 引用")]
     public Text scoreText;
@@ -149,8 +149,9 @@ public class GameManager : MonoBehaviour
                 recorder.StopAndSave(slotIndex);
             }
             var tp = ball.GetComponent<TrajectoryPlayer>();
-            if (tp != null && tp.IsPlaying)
+            if (tp != null)
             {
+                // Stop 为幂等操作：回放中则停止并复位球；未回放也安全
                 tp.Stop();
             }
         }
@@ -158,12 +159,8 @@ public class GameManager : MonoBehaviour
         int slotScore = 50;
         if (slotIndex >= 0 && slotIndex < slotScores.Length)
         {
+            // 特殊奖励槽（索引 slotCount）的 500 分也统一从数组取，不再硬编码
             slotScore = slotScores[slotIndex];
-        }
-        else if (slotIndex == 5)
-        {
-            // 中部偏下特殊奖励槽
-            slotScore = 500;
         }
 
         AddScore(slotScore);
@@ -182,11 +179,7 @@ public class GameManager : MonoBehaviour
                 statusText.text = $"落入槽 {slotIndex + 1}，获得 {slotScore} 分";
         }
 
-        // 销毁入槽的球，并通知 Launcher 减1
-        // if (ball != null)
-        // {
-        //     Destroy(ball.gameObject);
-        // }
+        // 入槽的球交给对象池回收，并通知 Launcher 减1
         if (launcher != null)
         {
             launcher.Recycle(ball);

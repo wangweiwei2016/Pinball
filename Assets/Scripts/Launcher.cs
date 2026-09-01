@@ -69,7 +69,8 @@ public class Launcher : MonoBehaviour
 
     private void Start()
     {
-        objectPool = new ObjectPool<GameObject>(CreateBallGameObject);
+        // 池容量与最大同时存在的球数一致，避免池满后回收的球引用被丢弃（泄漏）
+        objectPool = new ObjectPool<GameObject>(CreateBallGameObject, Mathf.Max(1, maxBalls));
         Collider2D collider = GetComponent<Collider2D>();
         if (null != collider)
         {
@@ -318,7 +319,7 @@ public class Launcher : MonoBehaviour
         ballGo.transform.SetParent(transform.parent, false);
         ballGo.transform.position = spawnPosition;
         ballGo.transform.localScale = new Vector3(ballScale, ballScale, 1f);
-        ballGo.layer = LayerMask.NameToLayer("Ball");
+        ballGo.layer = LayerMask.NameToLayer(Const.LAYER_BALL);
 
         var ballRb = ballGo.AddComponent<Rigidbody2D>();
         ballRb.gravityScale = gravityScale;

@@ -32,6 +32,7 @@ namespace DefaultNamespace
 
         // 撞击器近距反馈缓存
         private Bumper[] cachedBumpers;
+        private float[] cachedBumperRadii;
         private bool[] bumperInside;
         private float ballRadius;
 
@@ -115,10 +116,12 @@ namespace DefaultNamespace
             TickBumperFeedback();
         }
 
-        /// <summary>停止回放，恢复球为动态体（供下次发球或重置使用）。</summary>
+        /// <summary>
+        /// 停止回放，恢复球为动态体（供下次发球或重置使用）。
+        /// 幂等：无论当前是否在回放，都复位球状态，防止回放自然结束后球以运动学体悬浮卡住。
+        /// </summary>
         public void Stop()
         {
-            if (!isPlaying) return;
             isPlaying = false;
             currentTrajectory = null;
             if (ballRb != null)
@@ -141,7 +144,16 @@ namespace DefaultNamespace
                 }
             }
             isPlaying = false;
-            // 不在此恢复 isKinematic：球入槽触发由 GameManager 处理，由其调用 Stop 复位
+            currentTrajectory = null;
+            // 恢复动态体：轨迹自然播完（球未入槽）时也必须复位，
+            // 否则球会以运动学体悬浮卡住，无法再次发射。
+            // （球若恰好入槽，GameManager 会再调用 Stop，幂等无副作用。）
+            if (ballRb != null)
+            {
+                ballRb.velocity = Vector2.zero;
+                ballRb.angularVelocity = 0f;
+                ballRb.isKinematic = false;
+            }
         }
 
         private void PrepareBumperCache()
@@ -150,7 +162,16 @@ namespace DefaultNamespace
             {
                 cachedBumpers = FindObjectsOfType<Bumper>();
             }
-            bumperInside = cachedBumpers != null ? new bool[cachedBumpers.Length] : System.Array.Empty<bool>();
+            int count = cachedBumpers != null ? cachedBumpers.Length : 0;
+            bumperInside = new bool[count];
+
+            // 半径只缓存一次（Bumper 碰撞体/缩放通常不会在回放中变化），
+            // 避免每帧对每个 Bumper 调用 GetComponent<Collider2D>
+            cachedBumperRadii = new float[count];
+            for (int i = 0; i < count; i++)
+            {
+                cachedBumperRadii[i] = GetBumperRadius(cachedBumpers[i]);
+            }
 
             ballRadius = 0.25f;
             if (ballRb != null)
@@ -171,8 +192,7 @@ namespace DefaultNamespace
                 Bumper b = cachedBumpers[i];
                 if (b == null) continue;
 
-                float bumperRadius = GetBumperRadius(b);
-                float threshold = bumperRadius + ballRadius + bumperHitPadding;
+                float threshold = cachedBumperRadii[i] + ballRadius + bumperHitPadding;
                 float dist = ((Vector2)b.transform.position - pos).sqrMagnitude;
 
                 if (dist < threshold * threshold)

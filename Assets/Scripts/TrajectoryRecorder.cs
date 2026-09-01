@@ -84,11 +84,11 @@ namespace DefaultNamespace
         {
             if (!isRecording) return;
 
-            if (bumperName != null && bumperName.Contains("Star"))
+            if (bumperName != null && bumperName.Contains(Const.NAME_KEY_STAR))
             {
                 starHitCount++;
             }
-            else if (bumperName != null && bumperName.Contains("Shield"))
+            else if (bumperName != null && bumperName.Contains(Const.NAME_KEY_SHIELD))
             {
                 shieldHitCount++;
             }

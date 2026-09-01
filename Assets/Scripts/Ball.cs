@@ -246,7 +246,7 @@ public class Ball : MonoBehaviour
     {
         if (inSlot) return;
 
-        if (other.CompareTag(Const.TAG_SLOT) || other.name.StartsWith("SlotTrigger"))
+        if (other.CompareTag(Const.TAG_SLOT) || other.name.StartsWith(Const.NAME_PREFIX_SLOT_TRIGGER))
         {
             inSlot = true;
             if (GameManager.Instance != null)

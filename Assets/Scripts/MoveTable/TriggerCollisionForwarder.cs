@@ -16,7 +16,7 @@ namespace DefaultNamespace.MoveTable
     
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (owner != null && (other.CompareTag("Ball") || other.GetComponent<Ball>() != null))
+            if (owner != null && (other.CompareTag(Const.TAG_BALL) || other.GetComponent<Ball>() != null))
             {
                 owner.OnTriggerEnter();
             }
@@ -24,7 +24,7 @@ namespace DefaultNamespace.MoveTable
     
         private void OnTriggerStay2D(Collider2D other)
         {
-            if (owner != null && (other.CompareTag("Ball") || other.GetComponent<Ball>() != null))
+            if (owner != null && (other.CompareTag(Const.TAG_BALL) || other.GetComponent<Ball>() != null))
             {
                 owner.OnTriggerStay();
             }

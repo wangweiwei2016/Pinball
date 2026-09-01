@@ -6,7 +6,7 @@ namespace DefaultNamespace.MoveTable
     {
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.CompareTag("Ball") || other.GetComponent<Ball>() != null)
+            if (other.CompareTag(Const.TAG_BALL) || other.GetComponent<Ball>() != null)
             {
                 Destroy(other.gameObject);
             }

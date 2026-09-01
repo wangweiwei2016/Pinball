@@ -133,21 +133,6 @@ namespace DefaultNamespace.MoveTable
         /// </summary>
         public void UpdateMovement(float deltaTime)
         {
-            // ★ 如果正在等待重置，不移动
-            // if (isWaitingToReset)
-            // {
-            //     // 倒计时
-            //     resetTimer -= deltaTime;
-            //
-            //     // ★ 延迟结束后，从右侧重新出现
-            //     if (resetTimer <= 0f)
-            //     {
-            //         ResetToRight();
-            //     }
-            //
-            //     return;
-            // }
-
             // 从右向左匀速移动
             currentX -= moveSpeed * deltaTime;
 
@@ -281,7 +266,7 @@ namespace DefaultNamespace.MoveTable
             if (isWaitingToReset || !isVisible)
                 return;
 
-            if (!other.CompareTag("Ball") && other.GetComponent<Ball>() == null)
+            if (!other.CompareTag(Const.TAG_BALL) && other.GetComponent<Ball>() == null)
                 return;
 
             OnBallHit(other.gameObject);

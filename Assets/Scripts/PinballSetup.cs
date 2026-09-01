@@ -108,7 +108,7 @@ public class PinballSetup : MonoBehaviour
         Color slotWallColor = new Color(0.55f, 0.4f, 0.25f);
         Color slotBaseColor = new Color(0.35f, 0.25f, 0.15f);
         Color barrierColor = new Color(0.75f, 0.6f, 0.3f);
-        int[] slotScores = { 20, 40, 100, 40, 20 };
+        int[] slotScores = { 20, 40, 100, 40, 20, 500 };
 
         for (int i = 0; i < slotCount; i++)
         {
@@ -126,7 +126,7 @@ public class PinballSetup : MonoBehaviour
                 new Vector2(slotCenterX + slotWidth * 0.35f, slotBottomY + wallH * 0.5f),
                 new Vector2(wallThickness * 0.5f, wallH), rootTransform, slotWallColor);
 
-            var slotTrigger = new GameObject("SlotTrigger" + i);
+            var slotTrigger = new GameObject(Const.NAME_PREFIX_SLOT_TRIGGER + i);
             slotTrigger.transform.SetParent(rootTransform, false);
             slotTrigger.transform.position = new Vector2(slotCenterX, slotBottomY + slotHeight * 0.35f);
             var sCol = slotTrigger.AddComponent<BoxCollider2D>();
@@ -166,7 +166,7 @@ public class PinballSetup : MonoBehaviour
         launcherComp.gravityScale = gravityScale;
 
         // 让 Ball 层自碰撞禁用（球与球之间不碰撞）
-        int ballLayer = LayerMask.NameToLayer("Ball");
+        int ballLayer = LayerMask.NameToLayer(Const.LAYER_BALL);
         if (ballLayer >= 0)
         {
             Physics2D.IgnoreLayerCollision(ballLayer, ballLayer, true);
@@ -269,37 +269,7 @@ public class PinballSetup : MonoBehaviour
         specialCol.size = new Vector2(specialSlotW * 0.8f, specialSlotH * 0.8f);
         specialCol.tag = Const.TAG_SLOT;
 
-        CreateSlotLabel("SpecialSlotLabel", specialSlotX, specialSlotY + specialSlotH * 0.55f, rootTransform, 500);
-
-        // 两侧弧形撞击器（围绕特殊槽，形成漏斗形引导）
-        float arcCenterY = specialSlotY;
-        float arcRadius = 1.3f;
-        int arcBumperCount = 5;
-        float arcBumperRadius = 0.2f;
-
-        // // 左弧（圆心在特殊槽左侧，弧面朝右，形成 "(" 形状）
-        // float leftArcCenterX = -1.8f;
-        // for (int i = 0; i < arcBumperCount; i++)
-        // {
-        //     // 角度从 -50° 到 50°，弧面朝向特殊槽（右侧）
-        //     float angle = Mathf.Lerp(-50f, 50f, (float)i / (arcBumperCount - 1));
-        //     float rad = angle * Mathf.Deg2Rad;
-        //     float bx = leftArcCenterX + Mathf.Cos(rad) * arcRadius;
-        //     float by = arcCenterY + Mathf.Sin(rad) * arcRadius;
-        //     CreateBumper("LeftArcBumper" + i, new Vector2(bx, by), arcBumperRadius, rootTransform, true);
-        // }
-        //
-        // // 右弧（圆心在特殊槽右侧，弧面朝左，形成 ")" 形状）
-        // float rightArcCenterX = 1.8f;
-        // for (int i = 0; i < arcBumperCount; i++)
-        // {
-        //     // 角度从 130° 到 230°，弧面朝向特殊槽（左侧）
-        //     float angle = Mathf.Lerp(130f, 230f, (float)i / (arcBumperCount - 1));
-        //     float rad = angle * Mathf.Deg2Rad;
-        //     float bx = rightArcCenterX + Mathf.Cos(rad) * arcRadius;
-        //     float by = arcCenterY + Mathf.Sin(rad) * arcRadius;
-        //     CreateBumper("RightArcBumper" + i, new Vector2(bx, by), arcBumperRadius, rootTransform, true);
-        // }
+        CreateSlotLabel("SpecialSlotLabel", specialSlotX, specialSlotY + specialSlotH * 0.55f, rootTransform, slotScores[slotCount]);
 
         // 特殊撞击器
         CreateSpecialBumper("SpecialStar", new Vector2(-2.5f, 1.2f), 0.5f, rootTransform, new Color(1f, 0.85f, 0.2f));
