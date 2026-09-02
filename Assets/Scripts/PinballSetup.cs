@@ -14,14 +14,17 @@ using DefaultNamespace;
 /// </summary>
 public class PinballSetup : MonoBehaviour
 {
-    [Header("桌面尺寸")] public float tableWidth = 8f;
-    public float tableHeight = 14f;
+    [Header("桌面尺寸（竖屏 1080×2340 优化）")]
+    [Tooltip("弹珠台总宽度。竖屏宽度有限，7.5 刚好。")]
+    public float tableWidth = 7.5f;
+    [Tooltip("弹珠台总高度。竖屏高度优势，16 让球有足够的弹跳空间。")]
+    public float tableHeight = 16f;
     public float wallThickness = 0.4f;
 
     [Header("物理")] public float gravityScale = 1.6f;
 
     [Header("发射通道")] public float channelWidth = 1.0f;
-    public float channelTopY = 4.5f;
+    public float channelTopY = 5.0f;
 
     [Header("奖品槽")] public int slotCount = 5;
     public float slotHeight = 1.5f;
@@ -29,10 +32,20 @@ public class PinballSetup : MonoBehaviour
     [Header("撞击器")] public float bumperRingRadius = 3.0f;
     public int bumperRingCount = 10;
 
+    [Header("Camera")]
+    [Tooltip("是否自动配置 Camera 适配竖屏。")]
+    public bool autoSetupCamera = true;
+    [Tooltip("Camera 底部留白。")]
+    public float bottomPadding = 1.5f;
+    [Tooltip("Camera 顶部留白。")]
+    public float topPadding = 1.5f;
+    [Tooltip("Camera 两侧留白。")]
+    public float sidePadding = 1.0f;
+
     private void Start()
     {
         Build();
-        Destroy(gameObject); 
+        Destroy(gameObject);
     }
 
     private void Build()
@@ -299,18 +312,41 @@ public class PinballSetup : MonoBehaviour
         launcherComp.launchZoneTopY = channelTopY + 0.8f;  // 导流板高度
 
         // ---------- 摄像机 ----------
-        var cam = Camera.main;
-        if (cam == null)
+        if (autoSetupCamera)
         {
-            var camGo = new GameObject("MainCamera");
-            cam = camGo.AddComponent<Camera>();
-            camGo.tag = "MainCamera";
-        }
+            var cam = Camera.main;
+            if (cam == null)
+            {
+                var camGo = new GameObject("MainCamera");
+                cam = camGo.AddComponent<Camera>();
+                camGo.tag = "MainCamera";
+            }
 
-        cam.transform.position = new Vector3(0f, 0f, -10f);
-        cam.orthographic = true;
-        cam.orthographicSize = tableHeight / 2f + 1f;
-        cam.backgroundColor = new Color(0.08f, 0.08f, 0.12f);
+            cam.orthographic = true;
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.08f, 0.08f, 0.12f);
+            cam.transform.rotation = Quaternion.identity;
+
+            // 计算需要覆盖的区域
+            float neededHeight = tableHeight + bottomPadding + topPadding;
+            float neededWidth = tableWidth + sidePadding * 2f;
+
+            // 考虑屏幕宽高比（竖屏 1080×2340 ≈ 0.46）
+            float screenAspect = Screen.width > 0 && Screen.height > 0
+                ? (float)Screen.width / Screen.height
+                : 1080f / 2340f;
+
+            float orthoSizeByHeight = neededHeight * 0.5f;
+            float orthoSizeByWidth = neededWidth * 0.5f / Mathf.Max(0.01f, screenAspect);
+            cam.orthographicSize = Mathf.Max(orthoSizeByHeight, orthoSizeByWidth);
+
+            // Camera 位置：底部留白偏移
+            float camY = (bottomPadding - topPadding) * 0.5f;
+            cam.transform.position = new Vector3(0f, camY, -10f);
+
+            Screen.orientation = ScreenOrientation.Portrait;
+            Debug.Log($"[PinballSetup] Camera orthoSize={cam.orthographicSize:F2}, pos.y={camY:F1}, aspect={screenAspect:F2}");
+        }
 
         // ---------- GameManager ----------
         var gmGo = new GameObject("GameManager");

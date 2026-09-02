@@ -247,3 +247,37 @@ DanZhu/
 │       └── TrajectoryRecorder.cs
 └── Readme.md
 ```
+
+BattleSetup.Build()
+  ├─ GridSystem.Build()           → 5×8 格子
+  ├─ BattleManager (Ready 状态)   → 放置初始角色到 PlayerRow
+  └─ MonsterSpawner               → 等待开始
+
+按 B 键
+  └─ BattleManager.StartBattle()
+       ├─ 初始角色已放置
+       └─ MonsterSpawner.StartNextWave()
+            ├─ 每 1.5s 从顶部随机列生成怪物
+            ├─ 怪物沿列向下移动，遇角色阻挡停下攻击
+            ├─ 到达底部 → OnMonsterReachBottom → Defeat
+            └─ Wave 清空 → 等场上所有怪物死 → 下一波
+                 └─ 所有 Wave 打完 → OnAllWavesCleared → Victory
+
+使用方法
+新建空 GameObject，挂 BattleSetup.cs
+运行场景（自动构建战斗场景、生成默认角色和怪物）
+按 B 键开始战斗
+胜利/失败后按 B 重置
+
+Battle/
+├── IDamageable.cs          # 伤害接口 + Team 枚举
+├── GridCell.cs             # 单个格子
+├── GridSystem.cs           # 格子系统（查询/攻击范围判定）
+├── EntityBase.cs           # 实体基类（HP/攻击/移动/死亡）
+├── CharacterData.cs        # 角色配置 ScriptableObject
+├── MonsterData.cs          # 怪物配置 ScriptableObject
+├── Character.cs            # 玩家角色（普攻 + 自动技能 AOE）
+├── Monster.cs              # 怪物（向下移动 + 遇阻挡停攻）
+├── MonsterSpawner.cs       # Wave 调度 + 定时生成
+├── BattleManager.cs        # 战斗流程（Ready/Fighting/Victory/Defeat）
+└── BattleSetup.cs          # 一键生成场景
