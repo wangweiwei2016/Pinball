@@ -1,0 +1,606 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a803442eb6d47ffb6d78b95e00d4857, type: 3}
+  m_Name: slot_1_20260901_150305
+  m_EditorClassIdentifier: 
+  targetSlotId: 1
+  startPosition: {x: 3.5, y: -5.8}
+  startSpeed: 29
+  frames:
+  - position: {x: 3.5, y: -5.8}
+    timestamp: 0
+  - position: {x: 3.5, y: -5.8}
+    timestamp: 2
+  - position: {x: 3.506, y: -5.246279}
+    timestamp: 4
+  - position: {x: 3.512, y: -4.6988354}
+    timestamp: 6
+  - position: {x: 3.5180001, y: -4.1576705}
+    timestamp: 8
+  - position: {x: 3.5240002, y: -3.6227841}
+    timestamp: 10
+  - position: {x: 3.5300002, y: -3.094176}
+    timestamp: 12
+  - position: {x: 3.5360003, y: -2.5718465}
+    timestamp: 14
+  - position: {x: 3.5420003, y: -2.0557952}
+    timestamp: 16
+  - position: {x: 3.5480003, y: -1.5460222}
+    timestamp: 18
+  - position: {x: 3.5540004, y: -1.0425277}
+    timestamp: 20
+  - position: {x: 3.5600004, y: -0.5453115}
+    timestamp: 22
+  - position: {x: 3.5660005, y: -0.05437371}
+    timestamp: 24
+  - position: {x: 3.5720005, y: 0.4302857}
+    timestamp: 26
+  - position: {x: 3.5780005, y: 0.90866673}
+    timestamp: 28
+  - position: {x: 3.5840006, y: 1.3807694}
+    timestamp: 30
+  - position: {x: 3.5900006, y: 1.8465936}
+    timestamp: 32
+  - position: {x: 3.5900006, y: 2.3059497}
+    timestamp: 34
+  - position: {x: 3.5840006, y: 2.7590275}
+    timestamp: 36
+  - position: {x: 3.5780005, y: 3.2058268}
+    timestamp: 38
+  - position: {x: 3.5720005, y: 3.6463478}
+    timestamp: 40
+  - position: {x: 3.5660005, y: 4.0805902}
+    timestamp: 42
+  - position: {x: 3.5600004, y: 4.5085545}
+    timestamp: 44
+  - position: {x: 3.5540004, y: 4.93024}
+    timestamp: 46
+  - position: {x: 3.5480003, y: 5.345648}
+    timestamp: 48
+  - position: {x: 3.4783728, y: 5.679611}
+    timestamp: 50
+  - position: {x: 3.2229536, y: 5.8277836}
+    timestamp: 52
+  - position: {x: 3.0633523, y: 6.1195364}
+    timestamp: 54
+  - position: {x: 2.771212, y: 6.247888}
+    timestamp: 56
+  - position: {x: 2.485305, y: 6.3769135}
+    timestamp: 58
+  - position: {x: 2.199398, y: 6.499661}
+    timestamp: 60
+  - position: {x: 1.9141421, y: 6.585696}
+    timestamp: 62
+  - position: {x: 1.6350489, y: 6.480419}
+    timestamp: 64
+  - position: {x: 1.3559556, y: 6.3688636}
+    timestamp: 66
+  - position: {x: 1.0768623, y: 6.25103}
+    timestamp: 68
+  - position: {x: 0.797769, y: 6.126918}
+    timestamp: 70
+  - position: {x: 0.5186757, y: 5.996527}
+    timestamp: 72
+  - position: {x: 0.23958236, y: 5.859858}
+    timestamp: 74
+  - position: {x: -0.039510965, y: 5.716911}
+    timestamp: 76
+  - position: {x: -0.3186043, y: 5.567685}
+    timestamp: 78
+  - position: {x: -0.5976976, y: 5.412181}
+    timestamp: 80
+  - position: {x: -0.87679094, y: 5.250398}
+    timestamp: 82
+  - position: {x: -1.1558843, y: 5.0823374}
+    timestamp: 84
+  - position: {x: -1.4349775, y: 4.907998}
+    timestamp: 86
+  - position: {x: -1.7140708, y: 4.7273803}
+    timestamp: 88
+  - position: {x: -1.9931641, y: 4.540484}
+    timestamp: 90
+  - position: {x: -2.2722573, y: 4.3473096}
+    timestamp: 92
+  - position: {x: -2.5513506, y: 4.1478567}
+    timestamp: 94
+  - position: {x: -2.8304439, y: 3.9421253}
+    timestamp: 96
+  - position: {x: -3.1095371, y: 3.7301157}
+    timestamp: 98
+  - position: {x: -3.3886304, y: 3.5118275}
+    timestamp: 100
+  - position: {x: -3.5423098, y: 3.2909305}
+    timestamp: 102
+  - position: {x: -3.3050804, y: 3.0764132}
+    timestamp: 104
+  - position: {x: -3.067851, y: 2.8556173}
+    timestamp: 106
+  - position: {x: -2.8306217, y: 2.6285431}
+    timestamp: 108
+  - position: {x: -2.6994612, y: 2.6004114}
+    timestamp: 110
+  - position: {x: -2.7288427, y: 2.8749974}
+    timestamp: 112
+  - position: {x: -2.7582242, y: 3.143305}
+    timestamp: 114
+  - position: {x: -2.7876058, y: 3.4053342}
+    timestamp: 116
+  - position: {x: -2.8169873, y: 3.6610851}
+    timestamp: 118
+  - position: {x: -2.8463688, y: 3.9105575}
+    timestamp: 120
+  - position: {x: -2.8757503, y: 4.1537514}
+    timestamp: 122
+  - position: {x: -2.9051318, y: 4.390667}
+    timestamp: 124
+  - position: {x: -2.9345133, y: 4.621304}
+    timestamp: 126
+  - position: {x: -2.9638948, y: 4.845663}
+    timestamp: 128
+  - position: {x: -2.9932764, y: 5.0637436}
+    timestamp: 130
+  - position: {x: -3.0226579, y: 5.2755456}
+    timestamp: 132
+  - position: {x: -3.0520394, y: 5.481069}
+    timestamp: 134
+  - position: {x: -3.081421, y: 5.680314}
+    timestamp: 136
+  - position: {x: -3.1108024, y: 5.873281}
+    timestamp: 138
+  - position: {x: -3.140184, y: 6.0599694}
+    timestamp: 140
+  - position: {x: -3.1695654, y: 6.2403793}
+    timestamp: 142
+  - position: {x: -3.198947, y: 6.4145107}
+    timestamp: 144
+  - position: {x: -3.2283285, y: 6.582364}
+    timestamp: 146
+  - position: {x: -3.2495818, y: 6.477059}
+    timestamp: 148
+  - position: {x: -3.2695107, y: 6.3334417}
+    timestamp: 150
+  - position: {x: -3.2894397, y: 6.1835465}
+    timestamp: 152
+  - position: {x: -3.3093686, y: 6.027373}
+    timestamp: 154
+  - position: {x: -3.3292975, y: 5.8649206}
+    timestamp: 156
+  - position: {x: -3.3492265, y: 5.69619}
+    timestamp: 158
+  - position: {x: -3.3691554, y: 5.521181}
+    timestamp: 160
+  - position: {x: -3.3890843, y: 5.339894}
+    timestamp: 162
+  - position: {x: -3.4090133, y: 5.152328}
+    timestamp: 164
+  - position: {x: -3.4289422, y: 4.9584837}
+    timestamp: 166
+  - position: {x: -3.4488711, y: 4.7583613}
+    timestamp: 168
+  - position: {x: -3.4688, y: 4.5519605}
+    timestamp: 170
+  - position: {x: -3.488729, y: 4.339281}
+    timestamp: 172
+  - position: {x: -3.508658, y: 4.120323}
+    timestamp: 174
+  - position: {x: -3.5285869, y: 3.895087}
+    timestamp: 176
+  - position: {x: -3.5485158, y: 3.6635723}
+    timestamp: 178
+  - position: {x: -3.5684447, y: 3.4257793}
+    timestamp: 180
+  - position: {x: -3.5883737, y: 3.1817079}
+    timestamp: 182
+  - position: {x: -3.595625, y: 2.9314628}
+    timestamp: 184
+  - position: {x: -3.5955, y: 2.6756544}
+    timestamp: 186
+  - position: {x: -3.5954, y: 2.4137576}
+    timestamp: 188
+  - position: {x: -3.59532, y: 2.145772}
+    timestamp: 190
+  - position: {x: -3.58932, y: 1.871508}
+    timestamp: 192
+  - position: {x: -3.58332, y: 1.5909656}
+    timestamp: 194
+  - position: {x: -3.5773199, y: 1.3041449}
+    timestamp: 196
+  - position: {x: -3.5713198, y: 1.0110457}
+    timestamp: 198
+  - position: {x: -3.5653198, y: 0.71166813}
+    timestamp: 200
+  - position: {x: -3.5593197, y: 0.40601218}
+    timestamp: 202
+  - position: {x: -3.5533197, y: 0.094077826}
+    timestamp: 204
+  - position: {x: -3.5473197, y: -0.22413492}
+    timestamp: 206
+  - position: {x: -3.5413196, y: -0.54862607}
+    timestamp: 208
+  - position: {x: -3.5353196, y: -0.8793956}
+    timestamp: 210
+  - position: {x: -3.5293195, y: -1.2164435}
+    timestamp: 212
+  - position: {x: -3.5233195, y: -1.5597699}
+    timestamp: 214
+  - position: {x: -3.5173194, y: -1.9093746}
+    timestamp: 216
+  - position: {x: -3.5113194, y: -2.2652576}
+    timestamp: 218
+  - position: {x: -3.5053194, y: -2.627419}
+    timestamp: 220
+  - position: {x: -3.4993193, y: -2.995859}
+    timestamp: 222
+  - position: {x: -3.4933193, y: -3.370577}
+    timestamp: 224
+  - position: {x: -3.4873192, y: -3.7515738}
+    timestamp: 226
+  - position: {x: -3.4813192, y: -4.138849}
+    timestamp: 228
+  - position: {x: -3.4753191, y: -4.532402}
+    timestamp: 230
+  - position: {x: -3.469319, y: -4.932234}
+    timestamp: 232
+  - position: {x: -3.463319, y: -5.338344}
+    timestamp: 234
+  - position: {x: -3.3358648, y: -5.043226}
+    timestamp: 236
+  - position: {x: -3.2040045, y: -4.7269096}
+    timestamp: 238
+  - position: {x: -3.0721443, y: -4.416872}
+    timestamp: 240
+  - position: {x: -2.940284, y: -4.1131124}
+    timestamp: 242
+  - position: {x: -2.923615, y: -4.06561}
+    timestamp: 244
+  - position: {x: -3.0432997, y: -4.3210955}
+    timestamp: 246
+  - position: {x: -3.1629844, y: -4.5828595}
+    timestamp: 248
+  - position: {x: -3.282669, y: -4.8509016}
+    timestamp: 250
+  - position: {x: -3.4023538, y: -5.125222}
+    timestamp: 252
+  - position: {x: -3.5181828, y: -5.302126}
+    timestamp: 254
+  - position: {x: -3.5854123, y: -5.0689116}
+    timestamp: 256
+  - position: {x: -3.501405, y: -4.847055}
+    timestamp: 258
+  - position: {x: -3.4173977, y: -4.6314764}
+    timestamp: 260
+  - position: {x: -3.3333905, y: -4.4221764}
+    timestamp: 262
+  - position: {x: -3.2493832, y: -4.219155}
+    timestamp: 264
+  - position: {x: -3.165376, y: -4.022412}
+    timestamp: 266
+  - position: {x: -3.0813687, y: -3.831947}
+    timestamp: 268
+  - position: {x: -3.1631765, y: -3.7306752}
+    timestamp: 270
+  - position: {x: -3.333292, y: -3.6803474}
+    timestamp: 272
+  - position: {x: -3.5034075, y: -3.636298}
+    timestamp: 274
+  - position: {x: -3.5373805, y: -3.6025355}
+    timestamp: 276
+  - position: {x: -3.3927822, y: -3.5809948}
+    timestamp: 278
+  - position: {x: -3.248184, y: -3.5657327}
+    timestamp: 280
+  - position: {x: -3.1035857, y: -3.5567489}
+    timestamp: 282
+  - position: {x: -3.1942358, y: -3.534414}
+    timestamp: 284
+  - position: {x: -3.3140936, y: -3.5162547}
+    timestamp: 286
+  - position: {x: -3.4339514, y: -3.5043736}
+    timestamp: 288
+  - position: {x: -3.5538092, y: -3.498771}
+    timestamp: 290
+  - position: {x: -3.537258, y: -3.4990597}
+    timestamp: 292
+  - position: {x: -3.4353788, y: -3.5053382}
+    timestamp: 294
+  - position: {x: -3.3334997, y: -3.517895}
+    timestamp: 296
+  - position: {x: -3.2316206, y: -3.5367303}
+    timestamp: 298
+  - position: {x: -3.1297414, y: -3.5618439}
+    timestamp: 300
+  - position: {x: -3.1430302, y: -3.5826228}
+    timestamp: 302
+  - position: {x: -3.2321424, y: -3.602205}
+    timestamp: 304
+  - position: {x: -3.3212547, y: -3.6280656}
+    timestamp: 306
+  - position: {x: -3.410367, y: -3.6602046}
+    timestamp: 308
+  - position: {x: -3.4994793, y: -3.6986222}
+    timestamp: 310
+  - position: {x: -3.5885916, y: -3.743318}
+    timestamp: 312
+  - position: {x: -3.5338266, y: -3.790039}
+    timestamp: 314
+  - position: {x: -3.4580812, y: -3.8420784}
+    timestamp: 316
+  - position: {x: -3.382336, y: -3.9003963}
+    timestamp: 318
+  - position: {x: -3.3065906, y: -3.9649925}
+    timestamp: 320
+  - position: {x: -3.2308452, y: -4.035867}
+    timestamp: 322
+  - position: {x: -3.1550999, y: -4.1130204}
+    timestamp: 324
+  - position: {x: -3.0793545, y: -4.1964517}
+    timestamp: 326
+  - position: {x: -3.0036092, y: -4.2861614}
+    timestamp: 328
+  - position: {x: -2.9278638, y: -4.3821497}
+    timestamp: 330
+  - position: {x: -2.8521185, y: -4.4844165}
+    timestamp: 332
+  - position: {x: -2.7763731, y: -4.5929613}
+    timestamp: 334
+  - position: {x: -2.7006278, y: -4.7077847}
+    timestamp: 336
+  - position: {x: -2.6248825, y: -4.8288865}
+    timestamp: 338
+  - position: {x: -2.549137, y: -4.956267}
+    timestamp: 340
+  - position: {x: -2.4733918, y: -5.0899253}
+    timestamp: 342
+  - position: {x: -2.3976464, y: -5.229862}
+    timestamp: 344
+  - position: {x: -2.323134, y: -5.32724}
+    timestamp: 346
+  - position: {x: -2.2559423, y: -5.209235}
+    timestamp: 348
+  - position: {x: -2.1887507, y: -5.097509}
+    timestamp: 350
+  - position: {x: -2.1215591, y: -4.992061}
+    timestamp: 352
+  - position: {x: -2.0543675, y: -4.892892}
+    timestamp: 354
+  - position: {x: -1.9871761, y: -4.8000007}
+    timestamp: 356
+  - position: {x: -1.9199846, y: -4.713388}
+    timestamp: 358
+  - position: {x: -1.8527931, y: -4.633054}
+    timestamp: 360
+  - position: {x: -1.7856016, y: -4.558998}
+    timestamp: 362
+  - position: {x: -1.7184101, y: -4.4912205}
+    timestamp: 364
+  - position: {x: -1.6512187, y: -4.4297214}
+    timestamp: 366
+  - position: {x: -1.5840272, y: -4.3745008}
+    timestamp: 368
+  - position: {x: -1.5168357, y: -4.3255587}
+    timestamp: 370
+  - position: {x: -1.4496442, y: -4.2828946}
+    timestamp: 372
+  - position: {x: -1.3824527, y: -4.246509}
+    timestamp: 374
+  - position: {x: -1.3152612, y: -4.216402}
+    timestamp: 376
+  - position: {x: -1.2480698, y: -4.1925735}
+    timestamp: 378
+  - position: {x: -1.1808783, y: -4.175023}
+    timestamp: 380
+  - position: {x: -1.1136868, y: -4.163751}
+    timestamp: 382
+  - position: {x: -1.0464953, y: -4.1587577}
+    timestamp: 384
+  - position: {x: -0.9793038, y: -4.160043}
+    timestamp: 386
+  - position: {x: -0.91211224, y: -4.167606}
+    timestamp: 388
+  - position: {x: -0.8449207, y: -4.1814475}
+    timestamp: 390
+  - position: {x: -0.77772915, y: -4.2015676}
+    timestamp: 392
+  - position: {x: -0.7105376, y: -4.2279663}
+    timestamp: 394
+  - position: {x: -0.6433461, y: -4.260643}
+    timestamp: 396
+  - position: {x: -0.57615453, y: -4.299598}
+    timestamp: 398
+  - position: {x: -0.508963, y: -4.344832}
+    timestamp: 400
+  - position: {x: -0.44177145, y: -4.396344}
+    timestamp: 402
+  - position: {x: -0.3745799, y: -4.454135}
+    timestamp: 404
+  - position: {x: -0.30738837, y: -4.5182037}
+    timestamp: 406
+  - position: {x: -0.24019682, y: -4.588551}
+    timestamp: 408
+  - position: {x: -0.17300528, y: -4.665177}
+    timestamp: 410
+  - position: {x: -0.10581375, y: -4.748081}
+    timestamp: 412
+  - position: {x: -0.038622215, y: -4.8372636}
+    timestamp: 414
+  - position: {x: 0.028569318, y: -4.9327245}
+    timestamp: 416
+  - position: {x: 0.09576085, y: -5.034464}
+    timestamp: 418
+  - position: {x: 0.1629524, y: -5.142482}
+    timestamp: 420
+  - position: {x: 0.23014393, y: -5.256778}
+    timestamp: 422
+  - position: {x: 0.29602778, y: -5.3261566}
+    timestamp: 424
+  - position: {x: 0.35616544, y: -5.2299466}
+    timestamp: 426
+  - position: {x: 0.4163031, y: -5.140015}
+    timestamp: 428
+  - position: {x: 0.47644076, y: -5.056362}
+    timestamp: 430
+  - position: {x: 0.5365784, y: -4.978987}
+    timestamp: 432
+  - position: {x: 0.5967161, y: -4.907891}
+    timestamp: 434
+  - position: {x: 0.6568538, y: -4.843073}
+    timestamp: 436
+  - position: {x: 0.7169915, y: -4.7845335}
+    timestamp: 438
+  - position: {x: 0.7771292, y: -4.732272}
+    timestamp: 440
+  - position: {x: 0.83726686, y: -4.6862893}
+    timestamp: 442
+  - position: {x: 0.89740455, y: -4.646585}
+    timestamp: 444
+  - position: {x: 0.95754224, y: -4.613159}
+    timestamp: 446
+  - position: {x: 1.0176799, y: -4.586012}
+    timestamp: 448
+  - position: {x: 1.0778176, y: -4.5651426}
+    timestamp: 450
+  - position: {x: 1.1138413, y: -4.616547}
+    timestamp: 452
+  - position: {x: 1.1523213, y: -4.6769867}
+    timestamp: 454
+  - position: {x: 1.1928535, y: -4.7337832}
+    timestamp: 456
+  - position: {x: 1.2333856, y: -4.796858}
+    timestamp: 458
+  - position: {x: 1.2739177, y: -4.866211}
+    timestamp: 460
+  - position: {x: 1.3144498, y: -4.9418426}
+    timestamp: 462
+  - position: {x: 1.3549819, y: -5.0237527}
+    timestamp: 464
+  - position: {x: 1.395514, y: -5.1119413}
+    timestamp: 466
+  - position: {x: 1.4360461, y: -5.206408}
+    timestamp: 468
+  - position: {x: 1.4765782, y: -5.307153}
+    timestamp: 470
+  - position: {x: 1.4814758, y: -5.326306}
+    timestamp: 472
+  - position: {x: 1.4429758, y: -5.243361}
+    timestamp: 474
+  - position: {x: 1.4044757, y: -5.166694}
+    timestamp: 476
+  - position: {x: 1.3659756, y: -5.096306}
+    timestamp: 478
+  - position: {x: 1.3274755, y: -5.032196}
+    timestamp: 480
+  - position: {x: 1.2889755, y: -4.9743648}
+    timestamp: 482
+  - position: {x: 1.2504754, y: -4.9228115}
+    timestamp: 484
+  - position: {x: 1.2119753, y: -4.877537}
+    timestamp: 486
+  - position: {x: 1.1731067, y: -4.838107}
+    timestamp: 488
+  - position: {x: 1.1309854, y: -4.8016562}
+    timestamp: 490
+  - position: {x: 1.0856152, y: -4.768672}
+    timestamp: 492
+  - position: {x: 1.0370847, y: -4.739669}
+    timestamp: 494
+  - position: {x: 0.98558134, y: -4.7151675}
+    timestamp: 496
+  - position: {x: 0.93139994, y: -4.6956706}
+    timestamp: 498
+  - position: {x: 0.874944, y: -4.6816335}
+    timestamp: 500
+  - position: {x: 0.81671685, y: -4.6734343}
+    timestamp: 502
+  - position: {x: 0.757303, y: -4.671346}
+    timestamp: 504
+  - position: {x: 0.69734, y: -4.6755176}
+    timestamp: 506
+  - position: {x: 0.637377, y: -4.685967}
+    timestamp: 508
+  - position: {x: 0.57741404, y: -4.702695}
+    timestamp: 510
+  - position: {x: 0.51745105, y: -4.7257013}
+    timestamp: 512
+  - position: {x: 0.45748806, y: -4.7549863}
+    timestamp: 514
+  - position: {x: 0.39752507, y: -4.7905493}
+    timestamp: 516
+  - position: {x: 0.33756208, y: -4.832391}
+    timestamp: 518
+  - position: {x: 0.2775991, y: -4.880511}
+    timestamp: 520
+  - position: {x: 0.21763611, y: -4.9349093}
+    timestamp: 522
+  - position: {x: 0.15767312, y: -4.995586}
+    timestamp: 524
+  - position: {x: 0.09771013, y: -5.062541}
+    timestamp: 526
+  - position: {x: 0.037747145, y: -5.1357746}
+    timestamp: 528
+  - position: {x: -0.022215843, y: -5.2152867}
+    timestamp: 530
+  - position: {x: -0.08217883, y: -5.3010774}
+    timestamp: 532
+  - position: {x: -0.13991016, y: -5.3127317}
+    timestamp: 534
+  - position: {x: -0.19448692, y: -5.2407517}
+    timestamp: 536
+  - position: {x: -0.24906367, y: -5.1750503}
+    timestamp: 538
+  - position: {x: -0.30364043, y: -5.115627}
+    timestamp: 540
+  - position: {x: -0.35821718, y: -5.062482}
+    timestamp: 542
+  - position: {x: -0.41279393, y: -5.0156155}
+    timestamp: 544
+  - position: {x: -0.4673707, y: -4.9750276}
+    timestamp: 546
+  - position: {x: -0.52194744, y: -4.9407177}
+    timestamp: 548
+  - position: {x: -0.5765242, y: -4.9126863}
+    timestamp: 550
+  - position: {x: -0.63110095, y: -4.8909335}
+    timestamp: 552
+  - position: {x: -0.6868369, y: -4.874997}
+    timestamp: 554
+  - position: {x: -0.7445251, y: -4.864781}
+    timestamp: 556
+  - position: {x: -0.80360574, y: -4.860596}
+    timestamp: 558
+  - position: {x: -0.8634558, y: -4.8626356}
+    timestamp: 560
+  - position: {x: -0.92342097, y: -4.8709574}
+    timestamp: 562
+  - position: {x: -0.98338616, y: -4.8855577}
+    timestamp: 564
+  - position: {x: -1.0433514, y: -4.906436}
+    timestamp: 566
+  - position: {x: -1.1033165, y: -4.933593}
+    timestamp: 568
+  - position: {x: -1.1632817, y: -4.967028}
+    timestamp: 570
+  - position: {x: -1.2232468, y: -5.006742}
+    timestamp: 572
+  - position: {x: -1.283212, y: -5.052734}
+    timestamp: 574
+  - position: {x: -1.3431771, y: -5.1050043}
+    timestamp: 576
+  - position: {x: -1.4031422, y: -5.163553}
+    timestamp: 578
+  - position: {x: -1.4631073, y: -5.2283807}
+    timestamp: 580
+  - position: {x: -1.5230725, y: -5.299486}
+    timestamp: 582
+  - position: {x: -1.5830376, y: -5.37687}
+    timestamp: 582
+  starHitCount: 0
+  shieldHitCount: 0

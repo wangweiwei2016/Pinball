@@ -370,5 +370,9 @@ MonoBehaviour:
   tableHeight: 14
   wallThickness: 0.4
   gravityScale: 1.6
-  flipperLength: 1.6
-  flipperThickness: 0.35
+  channelWidth: 1
+  channelTopY: 5.5
+  slotCount: 5
+  slotHeight: 1.5
+  bumperRingRadius: 3
+  bumperRingCount: 10

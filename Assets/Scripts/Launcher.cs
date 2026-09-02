@@ -27,6 +27,13 @@ public class Launcher : MonoBehaviour
     [Tooltip("强制使用 BallPathController（忽略轨迹回放），调试用。")]
     public bool forcePathController = false;
 
+    [Header("纯物理模式（独立按键切换）")]
+    [Tooltip("开启后弹珠完全走物理引擎，不应用路径引导、不使用轨迹回放。")]
+    public bool purePhysicsMode = true;
+
+    [Tooltip("切换纯物理模式的按键（默认 F7）。")]
+    public KeyCode purePhysicsToggleKey = KeyCode.F7;
+
     [FormerlySerializedAs("minStarHits")] [Header("特殊撞击器要求（正常模式过滤轨迹用）")] [Tooltip("要求轨迹撞过 SpecialStar的次数 指定次数。0 = 不要求。")]
     public int tarStarHits = 0;
 
@@ -38,7 +45,7 @@ public class Launcher : MonoBehaviour
     public float ballScale = 0.4f;
     public float ballRadius = 0.5f;
     public float ballMaxSpeed = 28f;
-    public float ballMinSpeed = 3f;
+    public float ballMinSpeed = 0.1f;//3f;
 
     [Header("路径控制参数（由 PinballSetup 注入）")] public float[] slotCenterXs;
     public float[] slotCenterYs;
@@ -80,6 +87,13 @@ public class Launcher : MonoBehaviour
 
     private void Update()
     {
+        // 切换纯物理模式
+        if (Input.GetKeyDown(purePhysicsToggleKey))
+        {
+            purePhysicsMode = !purePhysicsMode;
+            Debug.Log($"[Launcher] 纯物理模式 {(purePhysicsMode ? "开启" : "关闭")} — 按 {purePhysicsToggleKey} 切换");
+        }
+
         if (!isContinuousLaunch && Input.GetKey(launchKey))
         {
             continuousCountDown += Time.deltaTime;
@@ -221,12 +235,46 @@ public class Launcher : MonoBehaviour
         // ---- 模式 1：编辑器预录模式 ----
         if (recorder != null && recorder.enableRecording)
         {
-            Debug.Log("[Launcher] 模式1：编辑器预录");
             rb.isKinematic = false;
-            ApplyTargetToPathController(pathController);
+            if (purePhysicsMode)
+            {
+                // 纯物理录制：关闭路径引导，让球完全走物理引擎，
+                // 但仍然录制轨迹数据（供回放使用）。
+                Debug.Log("[Launcher] 模式1：编辑器预录（纯物理）");
+                if (pathController != null)
+                {
+                    pathController.ClearTarget();
+                    pathController.steeringEnabled = false;
+                }
+            }
+            else
+            {
+                Debug.Log("[Launcher] 模式1：编辑器预录（带引导）");
+                ApplyTargetToPathController(pathController);
+            }
             ballGo.GetComponent<Ball>().Unlock();
             rb.velocity = startVel;
             recorder.StartRecording();
+            NotifyLaunched();
+            NotifyBallAdded();
+            SpawnWaitingBallIfNeeded();
+            return true;
+        }
+
+        // ---- 模式 5：纯物理（按键 F7 切换） ----
+        // 完全走物理引擎：不应用路径引导、不使用轨迹回放，
+        // 只保留 Ball 层的发射区豁免和能量约束（反弹力≤重力、反弹高度≤下落起点）。
+        if (purePhysicsMode)
+        {
+            Debug.Log("[Launcher] 模式5：纯物理引擎");
+            rb.isKinematic = false;
+            if (pathController != null)
+            {
+                pathController.ClearTarget();
+                pathController.steeringEnabled = false;
+            }
+            ballGo.GetComponent<Ball>().Unlock();
+            rb.velocity = startVel;
             NotifyLaunched();
             NotifyBallAdded();
             SpawnWaitingBallIfNeeded();

@@ -174,8 +174,8 @@ namespace DefaultNamespace
             asset.shieldHitCount = (byte)shieldHitCount;
 
             string tag = "";
-            if (starHitCount > 0) tag += $"_star{starHitCount}";
-            if (shieldHitCount > 0) tag += $"_shield{shieldHitCount}";
+            tag += $"_star{starHitCount}";
+            tag += $"_shield{shieldHitCount}";
             string stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
             string path = $"{folder}/slot_{targetSlotId}{tag}_{stamp}.asset";
             path = AssetDatabase.GenerateUniqueAssetPath(path);

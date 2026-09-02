@@ -32,7 +32,7 @@ public class PinballSetup : MonoBehaviour
     private void Start()
     {
         Build();
-        Destroy(gameObject);
+        Destroy(gameObject); 
     }
 
     private void Build()
@@ -75,7 +75,7 @@ public class PinballSetup : MonoBehaviour
 
         // 通道顶部导流板（将向上的球转为向左进入主区域）
         float deflectorRightX = channelLeftX + channelWidth - 0.1f;
-        float deflectorRightY = channelTopY + 0.8f;
+        float deflectorRightY = channelTopY + 0.4f;
         float deflectorLeftX = channelLeftX - 2.0f;
         float deflectorLeftY = channelTopY + 3f;
         float deflectorCenterX = (deflectorRightX + deflectorLeftX) * 0.5f;
@@ -184,25 +184,25 @@ public class PinballSetup : MonoBehaviour
         Vector2[] bumperPositions = new Vector2[]
         {
             // 顶部弧形
-            new Vector2(-0.5f, 4.0f),
+            new Vector2(-0.5f, 3f),
 
-            new Vector2(-1.5f, 3.1f),
-            new Vector2(0.5f, 3.1f),
+            new Vector2(-1.5f, 2.5f),
+            new Vector2(0.5f, 2.5f),
 
-            new Vector2(-2.5f, 2.3f),
-            new Vector2(-0.5f, 2.3f),
-            new Vector2(1.5f, 2.3f),
+            new Vector2(-2.5f, 2.1f),
+            new Vector2(-0.5f, 2.1f),
+            new Vector2(1.5f, 2.1f),
 
-            new Vector2(-1.3f, 1.8f),
-            new Vector2(0.3f, 1.8f),
+            new Vector2(-1.3f, 1.2f),
+            new Vector2(0.3f, 1.2f),
 
-            new Vector2(-0.5f, 1.1f),
+            new Vector2(-0.5f, 0.5f),
             // 中部
-            new Vector2(-1f, 0f),
-            new Vector2(0f, 0f),
+            new Vector2(-1f, -0.6f),
+            new Vector2(0f, -0.6f),
 
-            new Vector2(-2.8f, -0.6f),
-            new Vector2(1.8f, -0.6f),
+            new Vector2(-2.8f, -1.2f),
+            new Vector2(1.8f, -1.2f),
             // 下
             new Vector2(-1.5f, -1.8f),
             new Vector2(-0.5f, -1.8f),
