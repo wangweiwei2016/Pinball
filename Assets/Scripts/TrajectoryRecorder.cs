@@ -135,7 +135,22 @@ namespace DefaultNamespace
             }
 
 #if UNITY_EDITOR
-            SaveAsAsset(targetSlotId);
+            // 关键优化：立即复制所有需要的数据，避免延迟期间被后续状态变化影响
+            // （球可能被回收/重置，velocity 会变 0，所以 startSpeed 必须现在计算）
+            var framesCopy = new List<TrajectoryFrame>(recordedFrames);
+            Vector2 startPosCopy = startPosition;
+            float startSpeedCopy = startVelocity.magnitude;
+            byte starCopy = (byte)starHitCount;
+            byte shieldCopy = (byte)shieldHitCount;
+            string folderCopy = resourceFolder;
+
+            // 推迟到下一帧执行磁盘 I/O，避免阻塞当前物理回调链
+            // （OnTriggerEnter2D → GameManager.OnBallEnterSlot → StopAndSave）
+            EditorApplication.delayCall += () =>
+            {
+                SaveAsAssetDeferred(targetSlotId, framesCopy, startPosCopy, startSpeedCopy,
+                    starCopy, shieldCopy, folderCopy);
+            };
 #else
             Debug.Log("[TrajectoryRecorder] 运行时不可保存资源，已忽略。");
 #endif
@@ -148,43 +163,57 @@ namespace DefaultNamespace
         }
 
 #if UNITY_EDITOR
-        private void SaveAsAsset(int targetSlotId)
+        /// <summary>
+        /// 延迟执行的保存方法。所有数据通过参数传入，不依赖 recorder 实例状态。
+        /// 关键优化：移除 AssetDatabase.SaveAssets() 和 AssetDatabase.Refresh()，
+        /// 这两个调用是卡顿主因——CreateAsset 已写入磁盘并更新 AssetDatabase 内部状态，
+        /// SaveAssets/Refresh 对新创建的资产是冗余的，且 Refresh 会重新扫描整个 AssetDatabase。
+        /// </summary>
+        private static void SaveAsAssetDeferred(int targetSlotId, List<TrajectoryFrame> frames,
+            Vector2 startPosition, float startSpeed, byte starHitCount, byte shieldHitCount, string folder)
         {
-            string folder = resourceFolder;
-            if (!AssetDatabase.IsValidFolder(folder))
+            try
             {
-                // 逐级创建 Assets/Resources/Trajectories
-                string[] parts = folder.Split('/');
-                string current = parts[0];
-                for (int i = 1; i < parts.Length; i++)
+                if (!AssetDatabase.IsValidFolder(folder))
                 {
-                    string next = current + "/" + parts[i];
-                    if (!AssetDatabase.IsValidFolder(next))
-                        AssetDatabase.CreateFolder(current, parts[i]);
-                    current = next;
+                    // 逐级创建 Assets/Resources/Trajectories
+                    string[] parts = folder.Split('/');
+                    string current = parts[0];
+                    for (int i = 1; i < parts.Length; i++)
+                    {
+                        string next = current + "/" + parts[i];
+                        if (!AssetDatabase.IsValidFolder(next))
+                            AssetDatabase.CreateFolder(current, parts[i]);
+                        current = next;
+                    }
                 }
+
+                var asset = ScriptableObject.CreateInstance<TrajectoryData>();
+                asset.targetSlotId = targetSlotId;
+                asset.frames = frames;
+                asset.startPosition = startPosition;
+                asset.startSpeed = startSpeed;
+                asset.starHitCount = starHitCount;
+                asset.shieldHitCount = shieldHitCount;
+
+                string tag = $"_star{starHitCount}_shield{shieldHitCount}";
+                string stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string path = $"{folder}/slot_{targetSlotId}{tag}_{stamp}.asset";
+                path = AssetDatabase.GenerateUniqueAssetPath(path);
+
+                // CreateAsset 已写入磁盘文件并更新 AssetDatabase 内部缓存
+                AssetDatabase.CreateAsset(asset, path);
+                // 不调用 SaveAssets/Refresh：
+                // - SaveAssets 会强制刷新所有未保存资产到磁盘，对刚 CreateAsset 的资产是冗余的
+                // - Refresh 会重新扫描整个 AssetDatabase，是最重的操作（可能卡几秒）
+                // Unity 编辑器会在 Project 窗口下次刷新时自动显示新资产
+
+                Debug.Log($"[TrajectoryRecorder] 已保存轨迹：{path}（{frames.Count} 帧，槽位 {targetSlotId}，Star×{starHitCount}，Shield×{shieldHitCount}）");
             }
-
-            var asset = ScriptableObject.CreateInstance<TrajectoryData>();
-            asset.targetSlotId = targetSlotId;
-            asset.frames = new List<TrajectoryFrame>(recordedFrames);
-            asset.startPosition = startPosition;
-            asset.startSpeed = startVelocity.magnitude;
-            asset.starHitCount = (byte)starHitCount;
-            asset.shieldHitCount = (byte)shieldHitCount;
-
-            string tag = "";
-            tag += $"_star{starHitCount}";
-            tag += $"_shield{shieldHitCount}";
-            string stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            string path = $"{folder}/slot_{targetSlotId}{tag}_{stamp}.asset";
-            path = AssetDatabase.GenerateUniqueAssetPath(path);
-
-            AssetDatabase.CreateAsset(asset, path);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            Debug.Log($"[TrajectoryRecorder] 已保存轨迹：{path}（{recordedFrames.Count} 帧，槽位 {targetSlotId}，Star×{starHitCount}，Shield×{shieldHitCount}）");
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[TrajectoryRecorder] 保存失败：{e.Message}");
+            }
         }
 #endif
     }

@@ -377,7 +377,7 @@ public class Launcher : MonoBehaviour
 
         var ballCol = ballGo.AddComponent<CircleCollider2D>();
         ballCol.radius = ballRadius;
-        ballCol.sharedMaterial = CreateBouncyMaterial();
+        //ballCol.sharedMaterial = CreateBouncyMaterial();
 
         var ballSprite = ballGo.AddComponent<SpriteRenderer>();
         ballSprite.sprite = MakeCircleSprite(new Color(1f, 0.95f, 0.85f));
@@ -409,7 +409,7 @@ public class Launcher : MonoBehaviour
     private PhysicsMaterial2D CreateBouncyMaterial()
     {
         var mat = new PhysicsMaterial2D("BouncyMat");
-        mat.bounciness = 0.5f; //0.9f;
+        mat.bounciness = 0.3f; //0.9f;
         mat.friction = 0.05f;
         return mat;
     }
