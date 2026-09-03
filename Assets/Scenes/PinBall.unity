@@ -376,3 +376,7 @@ MonoBehaviour:
   slotHeight: 1.5
   bumperRingRadius: 3
   bumperRingCount: 10
+  autoSetupCamera: 1
+  bottomPadding: 1.5
+  topPadding: 1.5
+  sidePadding: 1
